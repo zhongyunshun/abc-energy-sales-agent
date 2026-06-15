@@ -1,0 +1,40 @@
+{
+  "project": "sales-agent-bonus3",
+  "sink": "local",
+  "run_id": "bonus3-20260615T174732Z-a6fa992d",
+  "trace_path": "C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\Bonus\\bonus3_observability\\traces\\bonus3-20260615T174732Z-a6fa992d.jsonl",
+  "html_path": "C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\Bonus\\bonus3_observability\\exports\\bonus3-20260615T174732Z-a6fa992d_trace_report.html",
+  "generated_at": "2026-06-15T17:47:35+00:00",
+  "endpoint": "http://localhost:8000/v1",
+  "model": "sales-agent-awq",
+  "provider": "auto",
+  "n_conversations": 3,
+  "n_turns": 7,
+  "n_failure_turns": 1,
+  "failure_turns": [
+    {
+      "conversation_id": "conv-adversarial-no-question",
+      "turn_index": 2,
+      "scenario": "info_gathering",
+      "rule_flags": {
+        "made_up_price": false,
+        "over_length": false,
+        "role_break": false,
+        "no_question_in_gathering": true
+      },
+      "failure": {
+        "is_failure": true,
+        "turn_index": 2,
+        "scenario": "info_gathering",
+        "dimensions": [
+          {
+            "dimension": "info_gathering",
+            "rule": "no_question_in_gathering",
+            "detail": "The assistant did not ask a discovery question in an info-gathering turn."
+          }
+        ]
+      },
+      "latency_ms": 331.6
+    }
+  ]
+}

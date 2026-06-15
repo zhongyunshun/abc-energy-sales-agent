@@ -1,0 +1,9 @@
+{"note": "valid: instruction only", "instruction": "Explain what a fixed-rate energy plan means for a residential customer.", "input": "", "output": "A fixed-rate plan locks in your unit price for the length of the contract, so your rate stays the same even if market prices change."}
+{"note": "valid: instruction + input", "instruction": "Respond to the customer objection professionally.", "input": "Customer says: Your rates seem higher than what I pay with my current provider.", "output": "I understand price matters. May I ask what you currently pay so I can check whether we can actually save you money?"}
+{"note": "valid: missing input field", "instruction": "Open a cold call to a homeowner about new energy plan options.", "output": "Hi, this is Alex calling from ABC Energy. I'll keep it brief: is now an okay time for a quick chat about your energy plan?"}
+{"note": "invalid: empty instruction", "instruction": "", "input": "", "output": "This output has no instruction and should be dropped."}
+{"note": "invalid: missing instruction field", "input": "Some context without an instruction.", "output": "Should be dropped at conversion."}
+{"note": "invalid: missing output field", "instruction": "Greet the customer warmly."}
+{"note": "invalid: whitespace-only output", "instruction": "Summarize the benefits of switching providers.", "output": "   "}
+{"note": "valid but contains PII", "instruction": "Confirm the callback details for the customer.", "input": "Customer phone is 555-123-4567 and email is john.doe@example.com.", "output": "Perfect, I will call you back at 555-123-4567 and send the summary to john.doe@example.com."}
+{"note": "valid conversion but non-English (dropped later by cleaning)", "instruction": "Antworten Sie dem Kunden auf Deutsch bezüglich seines Energievertrags.", "output": "Selbstverständlich, ich helfe Ihnen gerne bei allen Fragen zu Ihrem Energievertrag weiter."}

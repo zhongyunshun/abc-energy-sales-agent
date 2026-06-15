@@ -1,0 +1,62 @@
+# M6 adapter-merge config (design doc section 3-M6, proposal section 4-B3).
+#
+# Folds the M5 DPO LoRA adapter into dense BF16 weights via peft
+# `merge_and_unload`, producing a standalone HF model (safetensors + tokenizer +
+# chat template) that M7 (AWQ quant) and M8 (vLLM) load directly. After merging,
+# an 8-prompt greedy consistency check confirms `base + adapter` (PEFT inference)
+# and the merged model behave identically.
+#
+# LOAD PRECISION (design doc section 3-M6): the base is loaded in BF16 (NOT 4-bit)
+# so the merge matches the adapter's training precision -- the DPO/SFT adapters
+# were trained bf16 (load_in_4bit false, r32/alpha64). 4-bit merging would lose
+# precision and misalign the adapter. Loading a 4B model in bf16 needs ~9GB, fine
+# on a 12GB card; `device_map: cpu` is the slow-but-safe fallback for smaller cards.
+#
+# IMPORTANT: confirm the adapter is in place first --
+#   ... python scripts/training/merge_adapter.py --config configs/merge.yaml \
+#        --adapter models/adapters/dpo
+
+seed: 42
+
+# Base model: bf16, no 4-bit (must match the adapter's training precision).
+model:
+  name: unsloth/Qwen3-4B-Instruct-2507
+  dtype: bfloat16   # bf16 load avoids 4-bit merge precision loss (design doc 3-M6)
+  # Placement for the merge + consistency generation. "auto" puts the model on the
+  # GPU when available (~9GB for 4B bf16, fits a 12GB card). Set "cpu" as the
+  # slow-but-stable fallback for cards that cannot hold the bf16 model.
+  device_map: auto
+
+# Adapter to merge: the M5 DPO policy adapter (gitignored; A100/bf16/r32 product).
+# This is the standalone "default"/policy adapter at the output_dir root -- NOT the
+# frozen reference copy. Overridable on the CLI with --adapter.
+adapter: models/adapters/dpo
+
+# Output: dense HF model directory consumed by M7/M8.
+output_dir: models/merged
+
+# Consistency check (design doc section 3-M6): 8 fixed prompts, greedy-generated on
+# both `base+adapter` and merged, compared prompt by prompt.
+consistency:
+  prompts_path: tests/fixtures/merge_consistency_prompts.jsonl
+  default_system: null      # match SFT/DPO (no injected system); keep prompts identical
+  max_new_tokens: 128       # greedy continuation length compared on both models
+  # match_mode: "exact" = decoded text must be byte-identical (design default).
+  #             "prefix_tokens" = only the first prefix_n generated token ids must
+  #             match -- the documented relaxation for benign bf16-merge drift.
+  match_mode: exact
+  prefix_n: 64
+
+# Committed evidence (full runs only): a copy of the merge manifest + a
+# human-readable consistency report are written here so the merge + the 8/8 verdict
+# are auditable from the repo (the merged model dir itself is gitignored). Mirrors
+# how M4/M5 commit their training manifests under reports/training/.
+report:
+  manifest_path: reports/training/merge_manifest.json
+  consistency_report_path: reports/training/merge_consistency.md
+
+# --smoke overrides: fewer prompts / shorter generations to validate the pipeline.
+# Smoke does NOT touch the committed report paths above (writes only into output_dir).
+smoke:
+  n_prompts: 2
+  max_new_tokens: 16

@@ -1,0 +1,63 @@
+[project]
+name = "sales-agent"
+version = "0.1.0"
+description = "Full-pipeline R&D for a sales-conversation LLM: data engineering, SFT/DPO fine-tuning, AWQ quantization, vLLM serving, and automated evaluation."
+requires-python = ">=3.11"
+dependencies = [
+    "peft>=0.19.1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.8",
+]
+api = [
+    "pydantic>=2.9",
+    "pyyaml>=6.0",
+    "openai>=1.50",
+    "jinja2>=3.1",
+    "datasketch>=1.6",
+    "langdetect>=1.0.9",
+    "datasets>=3.0",
+]
+bench = [
+    "locust>=2.30",
+    "matplotlib>=3.9",
+    "pandas>=2.2",
+]
+# GPU stack: declared for documentation/locking purposes only.
+# NEVER install on the Windows host -- installed inside docker/Dockerfile.train
+# (Linux container) via `uv sync --group gpu`. See design doc section 5.2.
+gpu = [
+    "torch>=2.5",
+    "unsloth>=2025.1",
+    "trl>=0.13",
+    "llmcompressor>=0.4",
+]
+
+[tool.uv]
+default-groups = ["dev", "api", "bench"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sales_agent"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-m 'not gpu'"
+markers = [
+    "gpu: integration tests that require a GPU container (deselected by default; run with `pytest -m gpu`)",
+]
+asyncio_mode = "auto"

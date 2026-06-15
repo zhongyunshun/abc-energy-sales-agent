@@ -1,0 +1,93 @@
+{
+  "created_at": "2026-06-15T12:43:37.008299+00:00",
+  "git_commit": "fd6d3c0f511610bf9a4291936fba1b8c53ea14c0",
+  "inputs": [
+    {
+      "path": "C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\reports\\_smoke\\20260615_084326\\interim\\normalized.jsonl",
+      "sha256": "6217aacf2fa741ae5320793d2f7d6b5e209a60df515bd613b91bca2b94ae98dc",
+      "size_bytes": 389933
+    },
+    {
+      "path": "C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\reports\\_smoke\\20260615_084326\\interim\\synthetic_dialogues.jsonl",
+      "sha256": "58bfaadd8333ddcf39e48312b0d719957e578a5800bc957cf3dace689190609c",
+      "size_bytes": 6138
+    }
+  ],
+  "config": {
+    "seed": 42,
+    "output_dir": "C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\reports\\_smoke\\20260615_084326\\processed",
+    "smoke_limit": 300,
+    "inputs": [
+      {
+        "path": "C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\reports\\_smoke\\20260615_084326\\interim\\normalized.jsonl",
+        "role": "m1"
+      },
+      {
+        "path": "C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\reports\\_smoke\\20260615_084326\\interim\\synthetic_dialogues.jsonl",
+        "role": "m2"
+      }
+    ],
+    "dedup": {
+      "threshold": 0.85,
+      "num_perm": 128,
+      "shingle_size": 5
+    },
+    "downsample": {
+      "ratio": 100,
+      "high_value_scenarios": [
+        "objection_handling",
+        "info_gathering"
+      ],
+      "energy_probe_baseline": 536,
+      "energy_keywords": [
+        "energy",
+        "electricity",
+        "electric",
+        "kwh",
+        "kilowatt",
+        "kilowatt-hour",
+        "watt",
+        "megawatt",
+        "power bill",
+        "electricity bill",
+        "gas bill",
+        "energy bill",
+        "tariff",
+        "tariffs",
+        "solar",
+        "renewable",
+        "renewables",
+        "natural gas",
+        "off-peak",
+        "peak rate",
+        "power grid",
+        "utility provider",
+        "energy provider",
+        "energy supplier",
+        "electricity supplier",
+        "gas supplier"
+      ]
+    },
+    "split": {
+      "ratios": [
+        0.9,
+        0.05,
+        0.05
+      ],
+      "min_stratum": 20
+    },
+    "dist_warn_pp": 3.0
+  },
+  "stats": {
+    "counts": {
+      "train": 277,
+      "val": 16,
+      "test": 15
+    },
+    "leakage_check": {
+      "method": "minhash",
+      "threshold": 0.85,
+      "cross_split_dups": 0
+    }
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "created_at": "2026-06-13T03:10:58.522068+00:00",
+  "git_commit": "04bf72c1d8b41391f7b54d51899c66481316a7a3",
+  "inputs": [
+    {
+      "path": "/u1/x2jian/neo/sales_agent/configs/prompts/synth_preference.j2",
+      "sha256": "133aad952d4b77679fc81d02188cd07d7cae4589332c1bed6f14b4eb211f6e1a",
+      "size_bytes": 2102
+    },
+    {
+      "path": "/u1/x2jian/neo/sales_agent/configs/prompts/seeds/preference_seeds.jsonl",
+      "sha256": "4af17d28aa8cc3d683cb435a01b575b5fd190066ea973b79204f591d8492829c",
+      "size_bytes": 2332
+    }
+  ],
+  "config": {
+    "seed": 42,
+    "model": "google/gemini-2.5-flash",
+    "concurrency": 8,
+    "temperature": 0.9,
+    "max_tokens": 2600,
+    "client_max_retries": 3,
+    "max_retries": 2,
+    "use_json_mode": false,
+    "min_turns": 3,
+    "min_edit_distance": 0.3,
+    "n_seed_examples": [
+      1,
+      2
+    ],
+    "smoke_per_scenario": 2,
+    "templates": {
+      "dialogue_path": "/u1/x2jian/neo/sales_agent/configs/prompts/synth_dialogue.j2",
+      "preference_path": "/u1/x2jian/neo/sales_agent/configs/prompts/synth_preference.j2"
+    },
+    "seeds": {
+      "dialogue_path": "/u1/x2jian/neo/sales_agent/configs/prompts/seeds/dialogue_seeds.jsonl",
+      "preference_path": "/u1/x2jian/neo/sales_agent/configs/prompts/seeds/preference_seeds.jsonl"
+    },
+    "pricing": {
+      "input_per_1m": 0.3,
+      "output_per_1m": 2.5
+    },
+    "dialogues": {
+      "output_path": "/u1/x2jian/neo/sales_agent/data/interim/synthetic_dialogues.jsonl",
+      "n_turns_range": [
+        3,
+        6
+      ],
+      "personas": [
+        "a budget-conscious residential homeowner",
+        "a busy renter who is skeptical of cold calls",
+        "a retiree on a fixed income",
+        "a small business owner watching overheads",
+        "a tech-savvy customer who researches everything",
+        "a customer who is loyal to their current provider"
+      ],
+      "objection_types": [
+        "none",
+        "price",
+        "contract_term",
+        "provider_loyalty",
+        "scam_concern",
+        "switching_hassle"
+      ],
+      "outcomes": [
+        "agrees_to_a_follow_up",
+        "asks_for_a_callback",
+        "politely_declines"
+      ],
+      "scenarios": [
+        {
+          "name": "objection_handling",
+          "quota": 500,
+          "hint": "the customer raises an objection the agent must address without quoting prices",
+          "directive": "The customer voices the objection early and clearly. The agent acknowledges it, asks a clarifying question, and reframes the value, gathering usage details instead of quoting any price.\n"
+        },
+        {
+          "name": "info_gathering",
+          "quota": 450,
+          "hint": "the agent collects usage, contract, and decision-maker details",
+          "directive": "The agent asks for the customer's typical electricity usage or bill size, current contract end date, and who makes the utility decision, one question at a time and conversationally.\n"
+        },
+        {
+          "name": "cold_open",
+          "quota": 200,
+          "hint": "a brief, respectful introductory call",
+          "directive": "The agent identifies themselves and ABC Energy, states the reason for the call, and asks permission to continue before asking anything else.\n"
+        },
+        {
+          "name": "closing",
+          "quota": 200,
+          "hint": "the customer is ready and the agent explains next steps",
+          "directive": "The agent explains the verification step and switch timeline honestly, reassures the customer there is no service interruption, and confirms a written follow-up.\n"
+        },
+        {
+          "name": "general",
+          "quota": 150,
+          "hint": "a general energy-sales Q&A that doesn't fit the other buckets",
+          "directive": "The customer asks general questions about plans, tariffs types, or the switching process; the agent explains clearly without jargon and without inventing numbers.\n"
+        }
+      ]
+    },
+    "preferences": {
+      "output_path": "/u1/x2jian/neo/sales_agent/data/interim/preference_pairs.jsonl",
+      "personas": [
+        "a budget-conscious residential homeowner",
+        "a busy renter who is skeptical of cold calls",
+        "a small business owner watching overheads",
+        "a customer who is loyal to their current provider"
+      ],
+      "context_scenarios": [
+        "objection_handling",
+        "info_gathering",
+        "cold_open"
+      ],
+      "failure_modes": [
+        {
+          "name": "pushy",
+          "quota": 150,
+          "desc": "high-pressure, manipulative selling",
+          "rejected_directive": "- Use false urgency, refuse to take no for an answer, guilt-trip or\n  pressure the customer, and ignore their stated hesitation.\n"
+        },
+        {
+          "name": "rate_hallucination",
+          "quota": 150,
+          "desc": "inventing specific electricity prices, rates, or savings",
+          "rejected_directive": "- Confidently state a specific made-up rate or savings figure (for\n  example \"9.5 cents per kWh\" or \"save $35 a month\") as if it were fact.\n"
+        }
+      ]
+    }
+  },
+  "stats": {
+    "attempted": 300,
+    "succeeded": 300,
+    "abandoned": 0,
+    "estimated_cost_usd": 0.2248
+  }
+}

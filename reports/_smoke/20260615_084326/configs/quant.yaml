@@ -1,0 +1,32 @@
+seed: 42
+model:
+  merged_dir: models/adapters/merged
+  dtype: bfloat16
+  device_map: cpu
+output_dir: models/quantized/awq
+recipe:
+  scheme: W4A16_ASYM
+  group_size: 128
+  symmetric: false
+  targets:
+  - Linear
+  ignore:
+  - lm_head
+  duo_scaling: both
+calibration:
+  source_path: reports/_smoke/20260615_084326/processed/train.jsonl
+  n_samples: 256
+  smoke_n_samples: 32
+  max_seq_len: 768
+  batch_size: 1
+  pipeline: sequential
+self_check:
+  prompt: Hi, I think my electricity bill is too high. Can you help me lower it?
+  max_new_tokens: 32
+probe:
+  enabled: true
+  prompts_path: tests/fixtures/quant_probe_prompts.jsonl
+  max_new_tokens: 96
+report:
+  manifest_path: reports/training/quant_manifest.json
+  size_report_path: reports/training/quant_report.md

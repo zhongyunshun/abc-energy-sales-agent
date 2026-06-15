@@ -1,0 +1,66 @@
+# M1 data normalization config (design doc section 3-M1).
+# CLI: uv run python scripts/data/normalize.py --config configs/normalize.yaml [--smoke]
+
+seed: 42
+output_dir: data/interim
+
+# Per-source record cap when running with --smoke.
+smoke_limit: 50
+
+# Input sources. Each entry needs either `path` (local .json/.jsonl, resolved
+# against the repo root) or `hf_dataset` (+ optional `split`, default "train"),
+# plus `format` (alpaca | sharegpt | prefixed_pairs) and a `source_tag`
+# recorded on every record.
+#
+# goendalf666/sales-conversations is NOT ShareGPT: rows are string columns
+# "0".."19" of "Customer:"/"Salesman:" prefixed text bundling independent
+# exchanges, so it is split into single-turn dialogues (format
+# prefixed_pairs). Decision log: doc/tasks/progress.md risk board.
+sources:
+  - source_tag: "hf:goendalf666/sales-conversations"
+    hf_dataset: "goendalf666/sales-conversations"
+    split: train
+    format: prefixed_pairs
+
+clean:
+  # Turns whose stripped content is shorter than this are removed.
+  min_content_chars: 2
+
+# Keyword rules for initial scenario tagging (design doc section 2.1).
+# First matching scenario in this order wins ties; no hit means "general".
+scenario_keywords:
+  objection_handling:
+    - "too expensive"
+    - "not interested"
+    - "can't afford"
+    - "cannot afford"
+    - "already have a provider"
+    - "happy with my current"
+    - "think about it"
+    - "sounds like a scam"
+    - "i understand your concern"
+    - "that's a fair point"
+  info_gathering:
+    - "how much electricity"
+    - "monthly bill"
+    - "kwh"
+    - "current contract"
+    - "who is your current provider"
+    - "could you tell me"
+    - "do you know when"
+    - "how many people in your household"
+  cold_open:
+    - "is now a good time"
+    - "calling from"
+    - "reaching out"
+    - "do you have a minute"
+    - "sorry to bother you"
+    - "who is this"
+  closing:
+    - "sign up"
+    - "next step"
+    - "get you started"
+    - "confirmation email"
+    - "verification call"
+    - "welcome aboard"
+    - "finalize"

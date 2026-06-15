@@ -1,0 +1,93 @@
+{
+  "created_at": "2026-06-13T14:41:08.340888+00:00",
+  "git_commit": "c67f029f29ca0582f7c17a02c0bf57b1bc259ee4",
+  "inputs": [
+    {
+      "path": "/u1/x2jian/neo/sales_agent/data/interim/normalized.jsonl",
+      "sha256": "7cb837bb052cdd5d2a8cfb3c45185a7d8364b830ec40bcc69335b5f2c33849d1",
+      "size_bytes": 11340918
+    },
+    {
+      "path": "/u1/x2jian/neo/sales_agent/data/interim/synthetic_dialogues.jsonl",
+      "sha256": "8e19e375e11485396c6866d6abf6b6ef5ee2f59c99728e1ddefd3ab4fd31f8e5",
+      "size_bytes": 10410696
+    }
+  ],
+  "config": {
+    "seed": 42,
+    "output_dir": "/u1/x2jian/neo/sales_agent/data/processed",
+    "smoke_limit": 300,
+    "inputs": [
+      {
+        "path": "/u1/x2jian/neo/sales_agent/data/interim/normalized.jsonl",
+        "role": "m1"
+      },
+      {
+        "path": "/u1/x2jian/neo/sales_agent/data/interim/synthetic_dialogues.jsonl",
+        "role": "m2"
+      }
+    ],
+    "dedup": {
+      "threshold": 0.85,
+      "num_perm": 128,
+      "shingle_size": 5
+    },
+    "downsample": {
+      "ratio": 2.0,
+      "high_value_scenarios": [
+        "objection_handling",
+        "info_gathering"
+      ],
+      "energy_probe_baseline": 536,
+      "energy_keywords": [
+        "energy",
+        "electricity",
+        "electric",
+        "kwh",
+        "kilowatt",
+        "kilowatt-hour",
+        "watt",
+        "megawatt",
+        "power bill",
+        "electricity bill",
+        "gas bill",
+        "energy bill",
+        "tariff",
+        "tariffs",
+        "solar",
+        "renewable",
+        "renewables",
+        "natural gas",
+        "off-peak",
+        "peak rate",
+        "power grid",
+        "utility provider",
+        "energy provider",
+        "energy supplier",
+        "electricity supplier",
+        "gas supplier"
+      ]
+    },
+    "split": {
+      "ratios": [
+        0.9,
+        0.05,
+        0.05
+      ],
+      "min_stratum": 20
+    },
+    "dist_warn_pp": 3.0
+  },
+  "stats": {
+    "counts": {
+      "train": 11748,
+      "val": 655,
+      "test": 650
+    },
+    "leakage_check": {
+      "method": "minhash",
+      "threshold": 0.85,
+      "cross_split_dups": 0
+    }
+  }
+}

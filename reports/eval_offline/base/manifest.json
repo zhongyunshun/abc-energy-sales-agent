@@ -1,0 +1,57 @@
+{
+  "created_at": "2026-06-14T18:27:26.021411+00:00",
+  "git_commit": "46673cfe2d272a94398162a69e0a7114240ed8a3",
+  "inputs": [
+    {
+      "path": "C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\data\\processed\\test.jsonl",
+      "sha256": "353701a0442ec86521df7a0635f19be797bcf3fa76ff25b6e6055dc8a931ef0e",
+      "size_bytes": 745742
+    }
+  ],
+  "config": {
+    "seed": 42,
+    "test_path": "C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\data\\processed\\test.jsonl",
+    "output_dir": "C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\reports\\eval_offline",
+    "generation": {
+      "temperature": 0.0,
+      "max_tokens": 256,
+      "concurrency": 16
+    },
+    "sampling": {
+      "n_samples": null
+    },
+    "rules": {
+      "over_length_max_tokens": 120,
+      "gathering_scenarios": [
+        "info_gathering"
+      ],
+      "extra_price_patterns": [],
+      "role_break_patterns": []
+    },
+    "smoke": {
+      "n_samples": 10
+    },
+    "endpoint": {
+      "default": "http://127.0.0.1:8000/v1",
+      "served_model": "sales-agent-awq"
+    }
+  },
+  "stats": {
+    "model_tag": "base",
+    "n_samples": 650,
+    "overall_rule_rates": {
+      "made_up_price": 0.1015,
+      "over_length": 0.6785,
+      "role_break": 0.0892,
+      "no_question_in_gathering": 0.0815
+    },
+    "overall_length_tokens": {
+      "mean": 186.28,
+      "p50": 214.5,
+      "p90": 276.0,
+      "p95": 280.0,
+      "min": 21,
+      "max": 311
+    }
+  }
+}

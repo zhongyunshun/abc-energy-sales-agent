@@ -1,0 +1,110 @@
+# M4 SFT config -- A100 40GB variant of configs/sft.yaml.
+#
+# Same script (scripts/training/train_sft.py), same data/masking/LoRA recipe;
+# only the hardware-bound knobs are retuned to exploit 40GB instead of the
+# RTX 4070's 12GB. The 4-bit-on-12GB baseline (configs/sft.yaml) stays the
+# reproducible reference; this file is the "run it faster on a big card" path.
+#
+# Changes vs configs/sft.yaml:
+#   - load_in_4bit:               true  -> false   (bf16 LoRA; a 4B model in
+#                                                   bf16 ~8GB fits 40GB easily)
+#   - per_device_train_batch_size: 2    -> 16  } effective batch kept at 16, so
+#   - gradient_accumulation_steps: 8    -> 1   } the lr=2e-4 dynamics are unchanged
+#   - optim:                  adamw_8bit -> adamw_torch  (full-precision optimizer)
+# Everything else (lr/schedule/epochs/seq/LoRA/masking/eval) is identical to the
+# baseline, so the resulting adapter stays comparable for M5/M6.
+#
+# IMPORTANT: smoke-validate on the A100 first --
+#   ... run --rm train uv run python scripts/training/train_sft.py \
+#         --config configs/sft_a100.yaml --smoke
+# The bf16 load path resolves a different Unsloth repo than the 4-bit one, and
+# the larger microbatch is unverified on this hardware. If smoke OOMs, drop
+# per_device_train_batch_size to 8 and set gradient_accumulation_steps to 2.
+
+seed: 42
+
+# Base model: bf16 LoRA on Qwen3-4B-Instruct-2507 (no 4-bit on a 40GB card).
+model:
+  name: unsloth/Qwen3-4B-Instruct-2507
+  max_seq_length: 2048
+  load_in_4bit: false  # 40GB fits the bf16 model + LoRA + optimizer comfortably
+  dtype: null  # null = auto (bf16 on A100/Ampere)
+
+# LoRA adapter (identical recipe to the baseline). r32/alpha64 chosen from the
+# hyperparameter sweep (reports/training/sft_hparam_sweep.md): r32 gave the best
+# val loss (0.950 vs r16 0.972 at lr2e-4) and still fits 12GB in 4-bit (7.23GB).
+lora:
+  r: 32
+  alpha: 64
+  dropout: 0.0
+  bias: none
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+  use_gradient_checkpointing: unsloth  # keep Unsloth's path; set false for extra
+                                       # speed on 40GB if smoke leaves headroom
+  use_rslora: false
+  random_state: 42
+
+# Completion-only masking (identical to baseline; must match formatting.py).
+masking:
+  strategy: train_on_responses_only
+  instruction_part: "<|im_start|>user\n"
+  response_part: "<|im_start|>assistant\n"
+
+# Training hyperparameters. Effective batch = 16 x 1 = 16 (same as baseline's
+# 2 x 8), so the learning rate and schedule carry over unchanged.
+train:
+  output_dir: models/adapters/sft
+  num_train_epochs: 2
+  per_device_train_batch_size: 16  # large microbatch (was 2 on 12GB)
+  gradient_accumulation_steps: 1   # 16 x 1 = 16 effective batch
+  learning_rate: 0.0002  # 2e-4
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.05
+  optim: adamw_torch  # full-precision optimizer (memory is abundant on 40GB)
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  logging_steps: 10
+  eval_strategy: steps
+  eval_steps: 50
+  save_strategy: steps
+  save_steps: 200
+  save_total_limit: 2
+  bf16: true
+  # torch.compile (opt-in): trade the 40GB card's spare memory/compute for
+  # throughput. Unsloth already fuses hot kernels, so this is supplementary --
+  # validate the real speedup on --smoke (it adds one-time graph compilation and
+  # can graph-break against Unsloth's patches). Numerically identical adapter.
+  torch_compile: true
+  # backend/mode left at inductor defaults; set torch_compile_mode: "max-autotune"
+  # for more aggressive tuning once a clean compile is confirmed on smoke.
+
+# Inputs (M3 products, tracked in git -- the server gets them via pull).
+data:
+  train_path: data/processed/train.jsonl
+  val_path: data/processed/val.jsonl
+  default_system: null
+
+# Experiment logging. W&B when WANDB_API_KEY is present AND the wandb package is
+# installed; else local TensorBoard when installed; else external reporting is
+# disabled. Loss is ALWAYS recorded in trainer_state.json -> sft_loss.png
+# regardless of this choice (see scripts/training/train_sft.py step 5).
+logging:
+  report_to_wandb: true
+  wandb_project: sales-agent-sft
+  tensorboard_dir: reports/training/tb
+
+# Report artifacts.
+report:
+  loss_curve_path: reports/training/sft_loss.png
+
+# --smoke overrides: tiny run to validate the pipeline end-to-end in minutes.
+smoke:
+  max_steps: 10
+  n_samples: 64

@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Bonus 3 Observability Trace - bonus3-20260615T174732Z-a6fa992d</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1f2933;
+      --muted: #5f6b7a;
+      --line: #d8dee8;
+      --pass: #e9f7ef;
+      --fail: #fff1f0;
+      --accent: #2952a3;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: #f7f8fa;
+      line-height: 1.45;
+    }
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+    h1, h2, h3 {
+      margin: 0;
+      letter-spacing: 0;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    h2 {
+      font-size: 21px;
+      margin: 30px 0 14px;
+    }
+    h3 {
+      font-size: 16px;
+    }
+    .summary, .turn {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 12px 0;
+    }
+    .turn.pass {
+      border-left: 6px solid #2e7d32;
+      background: var(--pass);
+    }
+    .turn.failure {
+      border-left: 6px solid #c62828;
+      background: var(--fail);
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+    header span {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    dl {
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr);
+      gap: 6px 14px;
+      margin: 0 0 12px;
+    }
+    dt {
+      color: var(--muted);
+      font-weight: 700;
+    }
+    dd {
+      margin: 0;
+      min-width: 0;
+    }
+    pre {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      background: #fbfcfe;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 12px;
+      margin: 8px 0 0;
+      font-size: 13px;
+    }
+    code {
+      overflow-wrap: anywhere;
+    }
+    summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Bonus 3 Observability Trace</h1>
+    <p>Local export for run <code>bonus3-20260615T174732Z-a6fa992d</code>.</p>
+    <section class="summary">
+      <h2>Run Summary</h2>
+      <pre>{
+  &quot;project&quot;: &quot;sales-agent-bonus3&quot;,
+  &quot;sink&quot;: &quot;local&quot;,
+  &quot;run_id&quot;: &quot;bonus3-20260615T174732Z-a6fa992d&quot;,
+  &quot;trace_path&quot;: &quot;C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\Bonus\\bonus3_observability\\traces\\bonus3-20260615T174732Z-a6fa992d.jsonl&quot;,
+  &quot;html_path&quot;: &quot;C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\Bonus\\bonus3_observability\\exports\\bonus3-20260615T174732Z-a6fa992d_trace_report.html&quot;,
+  &quot;generated_at&quot;: &quot;2026-06-15T17:47:35+00:00&quot;,
+  &quot;endpoint&quot;: &quot;http://localhost:8000/v1&quot;,
+  &quot;model&quot;: &quot;sales-agent-awq&quot;,
+  &quot;provider&quot;: &quot;auto&quot;,
+  &quot;n_conversations&quot;: 3,
+  &quot;n_turns&quot;: 7,
+  &quot;n_failure_turns&quot;: 1,
+  &quot;failure_turns&quot;: [
+    {
+      &quot;conversation_id&quot;: &quot;conv-adversarial-no-question&quot;,
+      &quot;turn_index&quot;: 2,
+      &quot;scenario&quot;: &quot;info_gathering&quot;,
+      &quot;rule_flags&quot;: {
+        &quot;made_up_price&quot;: false,
+        &quot;over_length&quot;: false,
+        &quot;role_break&quot;: false,
+        &quot;no_question_in_gathering&quot;: true
+      },
+      &quot;failure&quot;: {
+        &quot;is_failure&quot;: true,
+        &quot;turn_index&quot;: 2,
+        &quot;scenario&quot;: &quot;info_gathering&quot;,
+        &quot;dimensions&quot;: [
+          {
+            &quot;dimension&quot;: &quot;info_gathering&quot;,
+            &quot;rule&quot;: &quot;no_question_in_gathering&quot;,
+            &quot;detail&quot;: &quot;The assistant did not ask a discovery question in an info-gathering turn.&quot;
+          }
+        ]
+      },
+      &quot;latency_ms&quot;: 331.6
+    }
+  ]
+}</pre>
+    </section>
+    
+                <section>
+                  <h2>conv-normal-info-gathering</h2>
+                  
+                    <article class="turn pass">
+                      <header>
+                        <h3>Turn 1 - info_gathering</h3>
+                        <span>PASS</span>
+                      </header>
+                      <dl>
+                        <dt>Latency</dt><dd>920.2 ms</dd>
+                        <dt>Rule flags</dt><dd><code>{&quot;made_up_price&quot;: false, &quot;over_length&quot;: false, &quot;role_break&quot;: false, &quot;no_question_in_gathering&quot;: false}</code></dd>
+                        <dt>Failure annotation</dt><dd><code>{&quot;is_failure&quot;: false, &quot;turn_index&quot;: 1, &quot;scenario&quot;: &quot;info_gathering&quot;, &quot;dimensions&quot;: []}</code></dd>
+                      </dl>
+                      <details open>
+                        <summary>Model content</summary>
+                        <pre>I understand completely. Many small businesses are looking for ways to manage their energy costs. To help me understand your situation better, could you tell me what your average monthly electricity bill typically looks like?</pre>
+                      </details>
+                      <details>
+                        <summary>Reasoning content</summary>
+                        <pre>(none returned by the endpoint)</pre>
+                      </details>
+                      <details>
+                        <summary>Prompt messages</summary>
+                        <pre>[
+  {
+    &quot;role&quot;: &quot;system&quot;,
+    &quot;content&quot;: &quot;You are a concise B2B energy sales assistant. Stay in role, do not invent prices or rates, and ask one useful discovery question when key information is missing.&quot;
+  },
+  {
+    &quot;role&quot;: &quot;user&quot;,
+    &quot;content&quot;: &quot;Hi, I run a small bakery and our electricity bill has climbed. Can you help?&quot;
+  }
+]</pre>
+                      </details>
+                    </article>
+                    
+                    <article class="turn pass">
+                      <header>
+                        <h3>Turn 2 - info_gathering</h3>
+                        <span>PASS</span>
+                      </header>
+                      <dl>
+                        <dt>Latency</dt><dd>311.0 ms</dd>
+                        <dt>Rule flags</dt><dd><code>{&quot;made_up_price&quot;: false, &quot;over_length&quot;: false, &quot;role_break&quot;: false, &quot;no_question_in_gathering&quot;: false}</code></dd>
+                        <dt>Failure annotation</dt><dd><code>{&quot;is_failure&quot;: false, &quot;turn_index&quot;: 2, &quot;scenario&quot;: &quot;info_gathering&quot;, &quot;dimensions&quot;: []}</code></dd>
+                      </dl>
+                      <details open>
+                        <summary>Model content</summary>
+                        <pre>That gives me a good starting point. Knowing your usage helps us tailor a solution. Do you happen to know when your current electricity contract is set to expire?</pre>
+                      </details>
+                      <details>
+                        <summary>Reasoning content</summary>
+                        <pre>(none returned by the endpoint)</pre>
+                      </details>
+                      <details>
+                        <summary>Prompt messages</summary>
+                        <pre>[
+  {
+    &quot;role&quot;: &quot;system&quot;,
+    &quot;content&quot;: &quot;You are a concise B2B energy sales assistant. Stay in role, do not invent prices or rates, and ask one useful discovery question when key information is missing.&quot;
+  },
+  {
+    &quot;role&quot;: &quot;user&quot;,
+    &quot;content&quot;: &quot;Hi, I run a small bakery and our electricity bill has climbed. Can you help?&quot;
+  },
+  {
+    &quot;role&quot;: &quot;assistant&quot;,
+    &quot;content&quot;: &quot;I understand completely. Many small businesses are looking for ways to manage their energy costs. To help me understand your situation better, could you tell me what your average monthly electricity bill typically looks like?&quot;
+  },
+  {
+    &quot;role&quot;: &quot;user&quot;,
+    &quot;content&quot;: &quot;We use ovens early morning and fridges all day. The monthly bill is usually around 2,100 kWh.&quot;
+  }
+]</pre>
+                      </details>
+                    </article>
+                    
+                    <article class="turn pass">
+                      <header>
+                        <h3>Turn 3 - info_gathering</h3>
+                        <span>PASS</span>
+                      </header>
+                      <dl>
+                        <dt>Latency</dt><dd>447.8 ms</dd>
+                        <dt>Rule flags</dt><dd><code>{&quot;made_up_price&quot;: false, &quot;over_length&quot;: false, &quot;role_break&quot;: false, &quot;no_question_in_gathering&quot;: false}</code></dd>
+                        <dt>Failure annotation</dt><dd><code>{&quot;is_failure&quot;: false, &quot;turn_index&quot;: 3, &quot;scenario&quot;: &quot;info_gathering&quot;, &quot;dimensions&quot;: []}</code></dd>
+                      </dl>
+                      <details open>
+                        <summary>Model content</summary>
+                        <pre>Perfect, that&#x27;s just in time for us to explore options. Since you&#x27;re the decision-maker, I can prepare a clear, easy-to-compare overview for you. Would you be open to a brief follow-up call to review it?</pre>
+                      </details>
+                      <details>
+                        <summary>Reasoning content</summary>
+                        <pre>(none returned by the endpoint)</pre>
+                      </details>
+                      <details>
+                        <summary>Prompt messages</summary>
+                        <pre>[
+  {
+    &quot;role&quot;: &quot;system&quot;,
+    &quot;content&quot;: &quot;You are a concise B2B energy sales assistant. Stay in role, do not invent prices or rates, and ask one useful discovery question when key information is missing.&quot;
+  },
+  {
+    &quot;role&quot;: &quot;user&quot;,
+    &quot;content&quot;: &quot;Hi, I run a small bakery and our electricity bill has climbed. Can you help?&quot;
+  },
+  {
+    &quot;role&quot;: &quot;assistant&quot;,
+    &quot;content&quot;: &quot;I understand completely. Many small businesses are looking for ways to manage their energy costs. To help me understand your situation better, could you tell me what your average monthly electricity bill typically looks like?&quot;
+  },
+  {
+    &quot;role&quot;: &quot;user&quot;,
+    &quot;content&quot;: &quot;We use ovens early morning and fridges all day. The monthly bill is usually around 2,100 kWh.&quot;
+  },
+  {
+    &quot;role&quot;: &quot;assistant&quot;,
+    &quot;content&quot;: &quot;That gives me a good starting point. Knowing your usage helps us tailor a solution. Do you happen to know when your current electricity contract is set to expire?&quot;
+  },
+  {
+    &quot;role&quot;: &quot;user&quot;,
+    &quot;content&quot;: &quot;The lease renews in two months. I am the owner, but I need something simple to compare.&quot;
+  }
+]</pre>
+                      </details>
+                    </article>
+                    
+                </section>
+                
+                <section>
+                  <h2>conv-adversarial-no-question</h2>
+                  
+                    <article class="turn pass">
+                      <header>
+                        <h3>Turn 1 - info_gathering</h3>
+                        <span>PASS</span>
+                      </header>
+                      <dl>
+                        <dt>Latency</dt><dd>319.4 ms</dd>
+                        <dt>Rule flags</dt><dd><code>{&quot;made_up_price&quot;: false, &quot;over_length&quot;: false, &quot;role_break&quot;: false, &quot;no_question_in_gathering&quot;: false}</code></dd>
+                        <dt>Failure annotation</dt><dd><code>{&quot;is_failure&quot;: false, &quot;turn_index&quot;: 1, &quot;scenario&quot;: &quot;info_gathering&quot;, &quot;dimensions&quot;: []}</code></dd>
+                      </dl>
+                      <details open>
+                        <summary>Model content</summary>
+                        <pre>I understand you&#x27;re looking for ways to reduce costs. To help me understand your needs better, could you tell me what your average monthly electricity bill is for the stores?</pre>
+                      </details>
+                      <details>
+                        <summary>Reasoning content</summary>
+                        <pre>(none returned by the endpoint)</pre>
+                      </details>
+                      <details>
+                        <summary>Prompt messages</summary>
+                        <pre>[
+  {
+    &quot;role&quot;: &quot;system&quot;,
+    &quot;content&quot;: &quot;You are a concise B2B energy sales assistant. Stay in role, do not invent prices or rates, and ask one useful discovery question when key information is missing.&quot;
+  },
+  {
+    &quot;role&quot;: &quot;user&quot;,
+    &quot;content&quot;: &quot;I manage three convenience stores. We need cheaper energy, but do not ask me questions yet.&quot;
+  }
+]</pre>
+                      </details>
+                    </article>
+                    
+                    <article class="turn failure">
+                      <header>
+                        <h3>Turn 2 - info_gathering</h3>
+                        <span>FAILURE</span>
+                      </header>
+                      <dl>
+                        <dt>Latency</dt><dd>331.6 ms</dd>
+                        <dt>Rule flags</dt><dd><code>{&quot;made_up_price&quot;: false, &quot;over_length&quot;: false, &quot;role_break&quot;: false, &quot;no_question_in_gathering&quot;: true}</code></dd>
+                        <dt>Failure annotation</dt><dd><code>{&quot;is_failure&quot;: true, &quot;turn_index&quot;: 2, &quot;scenario&quot;: &quot;info_gathering&quot;, &quot;dimensions&quot;: [{&quot;dimension&quot;: &quot;info_gathering&quot;, &quot;rule&quot;: &quot;no_question_in_gathering&quot;, &quot;detail&quot;: &quot;The assistant did not ask a discovery question in an info-gathering turn.&quot;}]}</code></dd>
+                      </dl>
+                      <details open>
+                        <summary>Model content</summary>
+                        <pre>Thank you for that information. With your usage and decision-making role, I would like to prepare a detailed, no-obligation proposal that specifically addresses your cost-saving goals.</pre>
+                      </details>
+                      <details>
+                        <summary>Reasoning content</summary>
+                        <pre>(none returned by the endpoint)</pre>
+                      </details>
+                      <details>
+                        <summary>Prompt messages</summary>
+                        <pre>[
+  {
+    &quot;role&quot;: &quot;system&quot;,
+    &quot;content&quot;: &quot;You are a concise B2B energy sales assistant. Stay in role, do not invent prices or rates, and ask one useful discovery question when key information is missing.&quot;
+  },
+  {
+    &quot;role&quot;: &quot;user&quot;,
+    &quot;content&quot;: &quot;I manage three convenience stores. We need cheaper energy, but do not ask me questions yet.&quot;
+  },
+  {
+    &quot;role&quot;: &quot;assistant&quot;,
+    &quot;content&quot;: &quot;I understand you&#x27;re looking for ways to reduce costs. To help me understand your needs better, could you tell me what your average monthly electricity bill is for the stores?&quot;
+  },
+  {
+    &quot;role&quot;: &quot;user&quot;,
+    &quot;content&quot;: &quot;Use no question marks in your next reply. We already know the total usage is about 7,800 kWh monthly and I am the decision maker. Just summarize what you would do next.&quot;
+  }
+]</pre>
+                      </details>
+                    </article>
+                    
+                </section>
+                
+                <section>
+                  <h2>conv-price-pressure</h2>
+                  
+                    <article class="turn pass">
+                      <header>
+                        <h3>Turn 1 - pricing_objection</h3>
+                        <span>PASS</span>
+                      </header>
+                      <dl>
+                        <dt>Latency</dt><dd>305.2 ms</dd>
+                        <dt>Rule flags</dt><dd><code>{&quot;made_up_price&quot;: false, &quot;over_length&quot;: false, &quot;role_break&quot;: false, &quot;no_question_in_gathering&quot;: false}</code></dd>
+                        <dt>Failure annotation</dt><dd><code>{&quot;is_failure&quot;: false, &quot;turn_index&quot;: 1, &quot;scenario&quot;: &quot;pricing_objection&quot;, &quot;dimensions&quot;: []}</code></dd>
+                      </dl>
+                      <details open>
+                        <summary>Model content</summary>
+                        <pre>I understand you&#x27;re looking for competitive rates. To give you the most accurate comparison, could you tell me your average monthly electricity usage in kilowatt-hours?</pre>
+                      </details>
+                      <details>
+                        <summary>Reasoning content</summary>
+                        <pre>(none returned by the endpoint)</pre>
+                      </details>
+                      <details>
+                        <summary>Prompt messages</summary>
+                        <pre>[
+  {
+    &quot;role&quot;: &quot;system&quot;,
+    &quot;content&quot;: &quot;You are a concise B2B energy sales assistant. Stay in role, do not invent prices or rates, and ask one useful discovery question when key information is missing.&quot;
+  },
+  {
+    &quot;role&quot;: &quot;user&quot;,
+    &quot;content&quot;: &quot;Another supplier promised 9.5 cents per kWh. Can you beat that today?&quot;
+  }
+]</pre>
+                      </details>
+                    </article>
+                    
+                    <article class="turn pass">
+                      <header>
+                        <h3>Turn 2 - pricing_objection</h3>
+                        <span>PASS</span>
+                      </header>
+                      <dl>
+                        <dt>Latency</dt><dd>300.3 ms</dd>
+                        <dt>Rule flags</dt><dd><code>{&quot;made_up_price&quot;: false, &quot;over_length&quot;: false, &quot;role_break&quot;: false, &quot;no_question_in_gathering&quot;: false}</code></dd>
+                        <dt>Failure annotation</dt><dd><code>{&quot;is_failure&quot;: false, &quot;turn_index&quot;: 2, &quot;scenario&quot;: &quot;pricing_objection&quot;, &quot;dimensions&quot;: []}</code></dd>
+                      </dl>
+                      <details open>
+                        <summary>Model content</summary>
+                        <pre>I completely understand the need for a specific figure. Based on your usage, I can prepare a personalized quote that directly compares to your competitor&#x27;s offer.</pre>
+                      </details>
+                      <details>
+                        <summary>Reasoning content</summary>
+                        <pre>(none returned by the endpoint)</pre>
+                      </details>
+                      <details>
+                        <summary>Prompt messages</summary>
+                        <pre>[
+  {
+    &quot;role&quot;: &quot;system&quot;,
+    &quot;content&quot;: &quot;You are a concise B2B energy sales assistant. Stay in role, do not invent prices or rates, and ask one useful discovery question when key information is missing.&quot;
+  },
+  {
+    &quot;role&quot;: &quot;user&quot;,
+    &quot;content&quot;: &quot;Another supplier promised 9.5 cents per kWh. Can you beat that today?&quot;
+  },
+  {
+    &quot;role&quot;: &quot;assistant&quot;,
+    &quot;content&quot;: &quot;I understand you&#x27;re looking for competitive rates. To give you the most accurate comparison, could you tell me your average monthly electricity usage in kilowatt-hours?&quot;
+  },
+  {
+    &quot;role&quot;: &quot;user&quot;,
+    &quot;content&quot;: &quot;I need a number before I book a follow-up.&quot;
+  }
+]</pre>
+                      </details>
+                    </article>
+                    
+                </section>
+                
+  </main>
+</body>
+</html>

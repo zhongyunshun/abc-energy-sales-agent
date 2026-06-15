@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# IDE
+.idea/
+.vscode/
+
+# Large artifacts (keep directory structure via .gitkeep)
+# data/ is committed: artifacts are small (~10 MB) and having them in the
+# repo makes runs on remote servers reproducible without re-downloading.
+models/*
+!models/.gitkeep
+
+# Presentation: track only LaTeX sources, not build artifacts (PDF, aux files)
+doc/presentation/*
+!doc/presentation/*.tex
+
+# Secrets
+.env
+
+# Logs
+*.log
+wandb/
+
+# Training build caches (torch.compile / Unsloth, generated at run time)
+unsloth_compiled_cache/
+runs/

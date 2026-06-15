@@ -1,0 +1,61 @@
+seed: 42
+model:
+  name: unsloth/Qwen3-4B-Instruct-2507
+  max_seq_length: 2048
+  load_in_4bit: true
+  dtype: null
+lora:
+  r: 32
+  alpha: 64
+  dropout: 0.0
+  bias: none
+  target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+  use_gradient_checkpointing: unsloth
+  use_rslora: false
+  random_state: 42
+masking:
+  strategy: train_on_responses_only
+  instruction_part: '<|im_start|>user
+
+    '
+  response_part: '<|im_start|>assistant
+
+    '
+train:
+  output_dir: models/adapters/sft
+  num_train_epochs: 2
+  per_device_train_batch_size: 2
+  gradient_accumulation_steps: 8
+  learning_rate: 0.0002
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.05
+  optim: adamw_8bit
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  logging_steps: 10
+  eval_strategy: steps
+  eval_steps: 50
+  save_strategy: steps
+  save_steps: 200
+  save_total_limit: 2
+  bf16: true
+data:
+  train_path: reports/_smoke/20260615_084326/processed/train.jsonl
+  val_path: reports/_smoke/20260615_084326/processed/val.jsonl
+  default_system: null
+logging:
+  report_to_wandb: true
+  wandb_project: sales-agent-sft
+  tensorboard_dir: reports/training/tb
+report:
+  loss_curve_path: reports/training/sft_loss.png
+smoke:
+  max_steps: 10
+  n_samples: 64

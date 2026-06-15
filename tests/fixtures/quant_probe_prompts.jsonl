@@ -1,0 +1,5 @@
+{"id": "quant-probe-01-objection", "context": [{"role": "system", "content": "You are a professional energy sales agent for ABC Energy."}, {"role": "user", "content": "Your prices look higher than what I'm paying now, why would I switch?"}]}
+{"id": "quant-probe-02-info", "context": [{"role": "user", "content": "Hi, I'm shopping around for a new electricity plan. What information do you need from me to get started?"}]}
+{"id": "quant-probe-03-pricing", "context": [{"role": "system", "content": "You are an energy sales agent. Only state rates you can verify; never invent numbers."}, {"role": "user", "content": "What is the exact per-kWh rate and standing charge on your fixed plan?"}]}
+{"id": "quant-probe-04-coldopen", "context": [{"role": "user", "content": "Who is this and why are you calling me?"}]}
+{"id": "quant-probe-05-closing", "context": [{"role": "system", "content": "You are a helpful, low-pressure energy sales assistant."}, {"role": "user", "content": "Okay, the plan sounds reasonable. What are the next steps to sign up?"}]}

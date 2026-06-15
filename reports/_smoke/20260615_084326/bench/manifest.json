@@ -1,0 +1,49 @@
+{
+  "created_at": "2026-06-15T12:51:31.074625+00:00",
+  "git_commit": "fd6d3c0f511610bf9a4291936fba1b8c53ea14c0",
+  "inputs": [
+    {
+      "path": "C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\data\\processed\\test.jsonl",
+      "sha256": "353701a0442ec86521df7a0635f19be797bcf3fa76ff25b6e6055dc8a931ef0e",
+      "size_bytes": 745742
+    },
+    {
+      "path": "C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\configs\\bench.yaml",
+      "sha256": "307291f67e4e443a103a93f89c9ba141aa82714c5a1443b70f106bd4826b1291",
+      "size_bytes": 3007
+    }
+  ],
+  "config": {
+    "tiers": [
+      16
+    ],
+    "run_time_s": 30,
+    "warmup_s": 5,
+    "host": "http://127.0.0.1:8000",
+    "smoke": true,
+    "generation": {
+      "temperature": 0.0,
+      "max_tokens": 256
+    }
+  },
+  "stats": {
+    "wall_seconds": 30.7,
+    "tiers": [
+      {
+        "concurrency": 16,
+        "ttft_p50": 113.44408988952637,
+        "ttft_p95": 177.1204710006714,
+        "itl_p50": 18.014439221086175,
+        "itl_p95": 20.835814002897163,
+        "throughput_tok_s": 792.36,
+        "req_s": 19.0,
+        "error_rate": 0.0,
+        "n_total": 475,
+        "n_ok": 475,
+        "n_failed": 0,
+        "steady_window_s": 25
+      }
+    ],
+    "fp16_comparison_gap": "FP16 vs INT4 TTFT/ITL comparison NOT measured: the merged FP16 model (8.045GB) does not fit alongside the display on the 4070 (~7.9GB free), so only the INT4 (AWQ/compressed-tensors) service is benchmarked here. Size/theory comparison: M7 manifest (8.045GB FP16 -> 2.666GB INT4, 3.02x); quality: M7's 5 FP16-vs-INT4 probes (no visible regression). Handed to M12 README."
+  }
+}

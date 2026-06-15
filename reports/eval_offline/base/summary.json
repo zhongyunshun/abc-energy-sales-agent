@@ -1,0 +1,148 @@
+{
+  "model_tag": "base",
+  "n_samples": 650,
+  "gen_config": {
+    "temperature": 0.0,
+    "max_tokens": 256
+  },
+  "overall": {
+    "n": 650,
+    "rule_rates": {
+      "made_up_price": 0.1015,
+      "over_length": 0.6785,
+      "role_break": 0.0892,
+      "no_question_in_gathering": 0.0815
+    },
+    "rule_counts": {
+      "made_up_price": 66,
+      "over_length": 441,
+      "role_break": 58,
+      "no_question_in_gathering": 53
+    },
+    "length_tokens": {
+      "mean": 186.28,
+      "p50": 214.5,
+      "p90": 276.0,
+      "p95": 280.0,
+      "min": 21,
+      "max": 311
+    }
+  },
+  "by_scenario": {
+    "closing": {
+      "n": 29,
+      "rule_rates": {
+        "made_up_price": 0.0,
+        "over_length": 0.3448,
+        "role_break": 0.0,
+        "no_question_in_gathering": 0.0
+      },
+      "rule_counts": {
+        "made_up_price": 0,
+        "over_length": 10,
+        "role_break": 0,
+        "no_question_in_gathering": 0
+      },
+      "length_tokens": {
+        "mean": 118.69,
+        "p50": 103.0,
+        "p90": 197.8,
+        "p95": 235.4,
+        "min": 50,
+        "max": 276
+      }
+    },
+    "cold_open": {
+      "n": 30,
+      "rule_rates": {
+        "made_up_price": 0.0333,
+        "over_length": 0.1,
+        "role_break": 0.0,
+        "no_question_in_gathering": 0.0
+      },
+      "rule_counts": {
+        "made_up_price": 1,
+        "over_length": 3,
+        "role_break": 0,
+        "no_question_in_gathering": 0
+      },
+      "length_tokens": {
+        "mean": 81.4,
+        "p50": 71.5,
+        "p90": 120.1,
+        "p95": 125.95,
+        "min": 31,
+        "max": 251
+      }
+    },
+    "general": {
+      "n": 394,
+      "rule_rates": {
+        "made_up_price": 0.0939,
+        "over_length": 0.8604,
+        "role_break": 0.1421,
+        "no_question_in_gathering": 0.0
+      },
+      "rule_counts": {
+        "made_up_price": 37,
+        "over_length": 339,
+        "role_break": 56,
+        "no_question_in_gathering": 0
+      },
+      "length_tokens": {
+        "mean": 224.39,
+        "p50": 260.0,
+        "p90": 278.0,
+        "p95": 283.0,
+        "min": 26,
+        "max": 311
+      }
+    },
+    "info_gathering": {
+      "n": 82,
+      "rule_rates": {
+        "made_up_price": 0.3049,
+        "over_length": 0.5122,
+        "role_break": 0.0122,
+        "no_question_in_gathering": 0.6463
+      },
+      "rule_counts": {
+        "made_up_price": 25,
+        "over_length": 42,
+        "role_break": 1,
+        "no_question_in_gathering": 53
+      },
+      "length_tokens": {
+        "mean": 147.83,
+        "p50": 127.0,
+        "p90": 266.6,
+        "p95": 272.0,
+        "min": 28,
+        "max": 279
+      }
+    },
+    "objection_handling": {
+      "n": 115,
+      "rule_rates": {
+        "made_up_price": 0.0261,
+        "over_length": 0.4087,
+        "role_break": 0.0087,
+        "no_question_in_gathering": 0.0
+      },
+      "rule_counts": {
+        "made_up_price": 3,
+        "over_length": 47,
+        "role_break": 1,
+        "no_question_in_gathering": 0
+      },
+      "length_tokens": {
+        "mean": 127.53,
+        "p50": 94.0,
+        "p90": 266.6,
+        "p95": 273.6,
+        "min": 21,
+        "max": 286
+      }
+    }
+  }
+}

@@ -1,0 +1,94 @@
+# M5 DPO config (design doc section 3-M5, proposal section 4-B2).
+#
+# Continue-training the M4 SFT adapter with TRL DPOTrainer on the 300 synthetic
+# preference pairs (pushy 150 / rate_hallucination 150) to suppress pushy closes
+# and rate hallucination.
+#
+# Reference-model scheme (user-confirmed): "adapter 双副本" / ref=SFT. The base is
+# loaded ONCE in bf16; the SFT adapter is loaded twice on it -- a trainable
+# `policy` copy (named "default" so it saves to the output_dir root) and a frozen
+# `reference` copy. TRL swaps to `ref_adapter_name` to compute reference logps, so
+# KL is anchored to SFT (the standard DPO-from-SFT setup) with NO extra full model
+# in memory.
+#
+# Load precision MUST match the SFT adapter: it was trained bf16 (load_in_4bit
+# false, r32/alpha64) on the A100 -- see models/adapters/sft/manifest.json. Loading
+# 4-bit here would misalign the adapter, so load_in_4bit stays false and the run
+# requires a >=24GB card (validated on chippie06 A100 40GB; SFT peaked 17GB bf16).
+#
+# IMPORTANT: smoke-validate first --
+#   ... python scripts/training/train_dpo.py --config configs/dpo.yaml --smoke
+
+seed: 42
+
+# Base model: bf16, no 4-bit (must match the SFT adapter's training precision).
+model:
+  name: unsloth/Qwen3-4B-Instruct-2507
+  max_seq_length: 2048
+  load_in_4bit: false
+  dtype: null  # null = auto (bf16 on Ampere)
+
+# M4 SFT adapter to continue from (gitignored; A100/bf16/r32 product). Both the
+# policy and reference adapters are initialised from this directory.
+sft_adapter: models/adapters/sft
+
+# Reference scheme: two adapters on a shared base (ref = frozen SFT).
+ref:
+  scheme: two_adapter
+  policy_adapter_name: default     # trainable; "default" -> saves to output_dir root
+  ref_adapter_name: reference      # frozen copy of the SFT adapter
+
+# DPO hyperparameters (design doc section 3-M5: beta 0.1, lr 5e-6, 1 epoch,
+# batch as SFT). Effective batch = 4 x 4 = 16 (same as SFT); over 300 pairs that
+# is ~19 optimiser steps, so logging_steps=1 to give the margins curve real points.
+dpo:
+  output_dir: models/adapters/dpo
+  beta: 0.1
+  loss_type: sigmoid
+  num_train_epochs: 1
+  per_device_train_batch_size: 2
+  gradient_accumulation_steps: 8   # 2 x 8 = 16 effective batch (smoke at 4x4 peaked
+                                   # 34.85GB; 2x8 keeps the same effective batch /
+                                   # training dynamics but ~halves activation memory)
+  learning_rate: 5.0e-6
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.1
+  optim: adamw_torch
+  weight_decay: 0.0
+  max_grad_norm: 1.0
+  max_length: 2048         # prompt + completion cap
+  max_prompt_length: 1024  # prompt cap (completions are short voice-style replies)
+  logging_steps: 1
+  save_strategy: "no"      # single adapter saved explicitly after train (policy only)
+  bf16: true
+  gradient_checkpointing: false  # 40GB has ample room; flip to true if a smaller card OOMs
+
+# Inputs (M2 product, tracked in git).
+data:
+  pref_path: data/interim/preference_pairs.jsonl
+  default_system: null  # match SFT (no injected system); keep prompts identical
+
+# Behaviour probes: 20 fixed prompts (pushy / rate_hallucination), greedy before
+# (SFT) vs after (DPO) -> dpo_behavior_diff.md.
+probes:
+  path: tests/fixtures/dpo_probes.jsonl
+  max_new_tokens: 200
+  smoke_n: 2  # probes generated under --smoke (full run uses all 20)
+
+# Experiment logging (same policy as SFT: W&B if keyed+installed, else TensorBoard
+# if installed, else disabled; loss/rewards are always in trainer_state.json).
+logging:
+  report_to_wandb: true
+  wandb_project: sales-agent-dpo
+  tensorboard_dir: reports/training/tb_dpo
+
+# Report artifacts.
+report:
+  loss_curve_path: reports/training/dpo_loss.png
+  margins_curve_path: reports/training/dpo_margins.png
+  behavior_diff_path: reports/training/dpo_behavior_diff.md
+
+# --smoke overrides: tiny run to validate the pipeline end-to-end in minutes.
+smoke:
+  max_steps: 10
+  n_pairs: 32

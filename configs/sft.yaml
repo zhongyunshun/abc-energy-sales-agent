@@ -1,0 +1,89 @@
+# M4 SFT config (design doc section 3-M4, proposal section 4-B1).
+# CLI: docker compose -f docker/compose.yaml run --rm train \
+#        uv run python scripts/training/train_sft.py --config configs/sft.yaml [--smoke]
+#
+# Runs ONLY inside the GPU train container (Unsloth/TRL/torch are container-only;
+# design doc section 5.2). All hyperparameters live here -- no magic numbers in
+# code. The baseline table (design doc section 3-M4) is reproduced 1:1 below.
+
+seed: 42
+
+# Base model: Unsloth 4-bit QLoRA on Qwen3-4B-Instruct (non-thinking, 2507).
+# `name` is a HF/Unsloth repo id (configurable; the exact 4-bit repo is resolved
+# by Unsloth at load time). `max_seq_length` is the binding VRAM lever on 12GB.
+model:
+  name: unsloth/Qwen3-4B-Instruct-2507
+  max_seq_length: 2048
+  load_in_4bit: true
+  dtype: null  # null = auto (bf16 on Ampere+/Hopper, fp16 otherwise)
+
+# LoRA adapter (r32 / alpha64, all attention + MLP projections). Chosen from the
+# hyperparameter sweep (reports/training/sft_hparam_sweep.md); r32 beat r16 on val
+# loss and still fits the 12GB budget in 4-bit (measured 7.23GB peak).
+lora:
+  r: 32
+  alpha: 64
+  dropout: 0.0  # 0 enables Unsloth's optimized path
+  bias: none
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+  use_gradient_checkpointing: unsloth  # Unsloth long-context memory path
+  use_rslora: false
+  random_state: 42
+
+# Completion-only masking (design doc section 6, open item 1). Locked path:
+# Unsloth `train_on_responses_only` driven by the Qwen ChatML marker strings.
+# These MUST match src/sales_agent/training/formatting.py constants.
+masking:
+  strategy: train_on_responses_only  # NOT `path` (config loader auto-resolves *_path keys)
+  instruction_part: "<|im_start|>user\n"
+  response_part: "<|im_start|>assistant\n"
+
+# Training hyperparameters (baseline table). Effective batch = 2 x 8 = 16.
+train:
+  output_dir: models/adapters/sft
+  num_train_epochs: 2
+  per_device_train_batch_size: 2
+  gradient_accumulation_steps: 8
+  learning_rate: 0.0002  # 2e-4
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.05  # 5% warmup
+  optim: adamw_8bit
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  logging_steps: 10
+  eval_strategy: steps
+  eval_steps: 50
+  save_strategy: steps
+  save_steps: 200
+  save_total_limit: 2
+  bf16: true  # auto-downgraded to fp16 in-script if the GPU lacks bf16
+
+# Inputs (M3 products). Resolved to absolute paths against the repo root.
+data:
+  train_path: data/processed/train.jsonl
+  val_path: data/processed/val.jsonl
+  default_system: null  # if set, injected when a record lacks a system message
+
+# Experiment logging. W&B when WANDB_API_KEY is present (passed via compose env),
+# auto-downgraded to local TensorBoard otherwise -- loss is ALWAYS recorded
+# (design doc M4, proposal 4-B1). Never silently skip loss logging.
+logging:
+  report_to_wandb: true
+  wandb_project: sales-agent-sft
+  tensorboard_dir: reports/training/tb
+
+# Report artifacts (M12 README performance section source material).
+report:
+  loss_curve_path: reports/training/sft_loss.png
+
+# --smoke overrides: tiny run to validate the pipeline end-to-end in minutes.
+smoke:
+  max_steps: 10
+  n_samples: 64

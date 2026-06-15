@@ -1,0 +1,2 @@
+concurrency,ttft_p50,ttft_p95,itl_p50,itl_p95,throughput_tok_s,req_s,error_rate
+16,113.44,177.12,18.014,20.836,792.36,19.0,0.0

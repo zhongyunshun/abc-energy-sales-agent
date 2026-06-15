@@ -1,0 +1,52 @@
+seed: 42
+output_dir: reports/_smoke/20260615_084326/processed
+smoke_limit: 300
+inputs:
+- path: reports/_smoke/20260615_084326/interim/normalized.jsonl
+  role: m1
+- path: reports/_smoke/20260615_084326/interim/synthetic_dialogues.jsonl
+  role: m2
+dedup:
+  threshold: 0.85
+  num_perm: 128
+  shingle_size: 5
+downsample:
+  ratio: 100
+  high_value_scenarios:
+  - objection_handling
+  - info_gathering
+  energy_probe_baseline: 536
+  energy_keywords:
+  - energy
+  - electricity
+  - electric
+  - kwh
+  - kilowatt
+  - kilowatt-hour
+  - watt
+  - megawatt
+  - power bill
+  - electricity bill
+  - gas bill
+  - energy bill
+  - tariff
+  - tariffs
+  - solar
+  - renewable
+  - renewables
+  - natural gas
+  - off-peak
+  - peak rate
+  - power grid
+  - utility provider
+  - energy provider
+  - energy supplier
+  - electricity supplier
+  - gas supplier
+split:
+  ratios:
+  - 0.9
+  - 0.05
+  - 0.05
+  min_stratum: 20
+dist_warn_pp: 3.0

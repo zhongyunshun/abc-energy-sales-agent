@@ -1,0 +1,136 @@
+# M2 data synthesis config (design doc section 3-M2).
+# CLI: uv run python scripts/data/synthesize.py --config configs/synthesize.yaml \
+#        --mode dialogues|preferences [--smoke] [--output-dir DIR]
+
+seed: 42
+
+# Bulk model via OpenRouter (design doc section 1.4). Two-stage strategy: a
+# small, diverse seed pool is bootstrapped with a stronger model (e.g.
+# google/gemini-3.5-flash via `--model`), then the bulk is generated cheaply
+# here with each prompt anchored on 1-2 random seeds. Swap freely -- the model
+# name is the only code-free change.
+model: "google/gemini-2.5-flash"
+
+concurrency: 8
+temperature: 0.9          # dialogue/preference diversity
+max_tokens: 2600          # must fit the full JSON dialogue; truncation -> not_json
+client_max_retries: 3     # transient API retries inside OpenRouterClient
+max_retries: 2            # validation-failure regenerations per task (design: <= 2)
+use_json_mode: false      # rely on robust JSON extraction; flip on if the model supports it
+
+# Generation-side quality gate thresholds (design doc section 3-M2 step 3/4).
+min_turns: 3              # dialogue assistant-turn lower bound
+min_edit_distance: 0.3    # chosen/rejected normalized-Levenshtein lower bound
+
+# Few-shot seed examples injected per prompt: an int (fixed) or [lo, hi] for a
+# random per-task count. Seeds are scenario-matched and randomly sampled (seeded
+# per task, so reproducible). The dialogue seed pool is bootstrapped with a
+# stronger model -- see README / scripts usage.
+n_seed_examples: [1, 2]
+smoke_per_scenario: 2     # --smoke generates this many per scenario / failure mode
+
+templates:
+  dialogue_path: configs/prompts/synth_dialogue.j2
+  preference_path: configs/prompts/synth_preference.j2
+
+seeds:
+  dialogue_path: configs/prompts/seeds/dialogue_seeds.jsonl
+  preference_path: configs/prompts/seeds/preference_seeds.jsonl
+
+# OpenRouter pricing (USD per 1M tokens) for the cost report's estimate; set to
+# the bulk model google/gemini-2.5-flash's live OpenRouter prices (verified
+# 2026-06-13). The report always records raw token counts regardless. (For
+# reference: the seed-bootstrap model google/gemini-3.5-flash is 1.50 / 9.00.)
+pricing:
+  input_per_1m: 0.30
+  output_per_1m: 2.50
+
+# --- Dialogues (DialogueRecord) -------------------------------------------
+# Quotas sum to 3200, targeting ~3000 valid after gate attrition. Scaled up so
+# on-domain multi-turn synthetic data dominates the SFT mix rather than being
+# swamped by M1's generic, single-turn corpus (M1 is ~97% non-energy, ~94%
+# "general"). objection_handling and info_gathering dominate per proposal
+# section 4-A2; synthetic data carries accurate scenario labels.
+dialogues:
+  output_path: data/interim/synthetic_dialogues.jsonl
+  n_turns_range: [3, 6]
+  personas:
+    - "a budget-conscious residential homeowner"
+    - "a busy renter who is skeptical of cold calls"
+    - "a retiree on a fixed income"
+    - "a small business owner watching overheads"
+    - "a tech-savvy customer who researches everything"
+    - "a customer who is loyal to their current provider"
+  objection_types:
+    - "none"
+    - "price"
+    - "contract_term"
+    - "provider_loyalty"
+    - "scam_concern"
+    - "switching_hassle"
+  outcomes:
+    - "agrees_to_a_follow_up"
+    - "asks_for_a_callback"
+    - "politely_declines"
+  scenarios:
+    - name: objection_handling
+      quota: 1050
+      hint: "the customer raises an objection the agent must address without quoting prices"
+      directive: >
+        The customer voices the objection early and clearly. The agent
+        acknowledges it, asks a clarifying question, and reframes the value,
+        gathering usage details instead of quoting any price.
+    - name: info_gathering
+      quota: 950
+      hint: "the agent collects usage, contract, and decision-maker details"
+      directive: >
+        The agent asks for the customer's typical electricity usage or bill
+        size, current contract end date, and who makes the utility decision,
+        one question at a time and conversationally.
+    - name: cold_open
+      quota: 430
+      hint: "a brief, respectful introductory call"
+      directive: >
+        The agent identifies themselves and ABC Energy, states the reason for
+        the call, and asks permission to continue before asking anything else.
+    - name: closing
+      quota: 430
+      hint: "the customer is ready and the agent explains next steps"
+      directive: >
+        The agent explains the verification step and switch timeline honestly,
+        reassures the customer there is no service interruption, and confirms a
+        written follow-up.
+    - name: general
+      quota: 340
+      hint: "a general energy-sales Q&A that doesn't fit the other buckets"
+      directive: >
+        The customer asks general questions about plans, tariffs types, or the
+        switching process; the agent explains clearly without jargon and
+        without inventing numbers.
+
+# --- Preference pairs (PreferencePair) ------------------------------------
+# ~300 pairs across the two named failure modes (design section 2.2).
+preferences:
+  output_path: data/interim/preference_pairs.jsonl
+  personas:
+    - "a budget-conscious residential homeowner"
+    - "a busy renter who is skeptical of cold calls"
+    - "a small business owner watching overheads"
+    - "a customer who is loyal to their current provider"
+  context_scenarios:
+    - "objection_handling"
+    - "info_gathering"
+    - "cold_open"
+  failure_modes:
+    - name: pushy
+      quota: 150
+      desc: "high-pressure, manipulative selling"
+      rejected_directive: >
+        - Use false urgency, refuse to take no for an answer, guilt-trip or
+          pressure the customer, and ignore their stated hesitation.
+    - name: rate_hallucination
+      quota: 150
+      desc: "inventing specific electricity prices, rates, or savings"
+      rejected_directive: >
+        - Confidently state a specific made-up rate or savings figure (for
+          example "9.5 cents per kWh" or "save $35 a month") as if it were fact.

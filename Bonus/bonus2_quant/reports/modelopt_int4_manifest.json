@@ -1,0 +1,100 @@
+{
+  "created_at": "2026-06-15T19:31:34.602716+00:00",
+  "git_commit": null,
+  "inputs": [
+    {
+      "path": "/workspace/models/adapters/merged/model-00001-of-00002.safetensors",
+      "sha256": "0f6a7c154cb1302c87b66aad19cbb5e399c4f55d1aa5f1dac024310e0a90ca92",
+      "size_bytes": 4967215360
+    },
+    {
+      "path": "/workspace/models/adapters/merged/model-00002-of-00002.safetensors",
+      "sha256": "219f4fd9b6a78e037dffb6c478fbeff02d64bbd81eb714bdf60a4512fe616b02",
+      "size_bytes": 3077766632
+    },
+    {
+      "path": "/workspace/data/processed/train.jsonl",
+      "sha256": "cd9d6669892c8f2b77369e6b88edcfd27ef5f5299c4fad569a4f2c34e8c178fc",
+      "size_bytes": 13671329
+    },
+    {
+      "path": "/workspace/tests/fixtures/quant_probe_prompts.jsonl",
+      "sha256": "69895c0e1f18451c66e03f372337692f828ee84a75ff56280a7a59ee16c38dec",
+      "size_bytes": 1048
+    }
+  ],
+  "config": {
+    "format": "int4_awq",
+    "recipe": "general/ptq/fp8_default-kv_fp8_cast",
+    "model_dir": "/workspace/models/adapters/merged",
+    "calibration_path": "/workspace/data/processed/train.jsonl",
+    "probes_path": "/workspace/tests/fixtures/quant_probe_prompts.jsonl",
+    "output_dir": "/workspace/Bonus/bonus2_quant/artifacts/modelopt_int4_awq",
+    "reports_dir": "/workspace/Bonus/bonus2_quant/reports",
+    "report_prefix": "modelopt_int4",
+    "n_calib": 32,
+    "max_seq_len": 512,
+    "seed": 42,
+    "dtype": "bfloat16",
+    "device_map": "cuda",
+    "max_gpu_memory": "7GiB",
+    "max_cpu_memory": "48GiB",
+    "max_new_tokens": 96,
+    "install_missing_modelopt": true,
+    "modelopt_install_spec": "nvidia-modelopt==0.44.0",
+    "modelopt_install_deps": false,
+    "overwrite": true,
+    "skip_fakequant_smoke": false,
+    "offload_dir": "/workspace/Bonus/bonus2_quant/artifacts/_offload"
+  },
+  "stats": {
+    "format": "int4_awq",
+    "recipe": "mtq.INT4_AWQ_CFG",
+    "model_dir": "/workspace/models/adapters/merged",
+    "output_dir": "/workspace/Bonus/bonus2_quant/artifacts/modelopt_int4_awq",
+    "device_map": "cuda",
+    "max_gpu_memory": "7GiB",
+    "dtype": "bfloat16",
+    "n_calib": 32,
+    "max_seq_len": 512,
+    "calibration": {
+      "n_requested": 32,
+      "n_selected": 32,
+      "n_input": 11748,
+      "seed": 42,
+      "per_stratum": {
+        "closing|mid": 1,
+        "closing|short": 1,
+        "cold_open|mid": 1,
+        "cold_open|short": 1,
+        "general|mid": 0,
+        "general|short": 19,
+        "info_gathering|mid": 1,
+        "info_gathering|short": 3,
+        "objection_handling|mid": 1,
+        "objection_handling|short": 4
+      },
+      "per_scenario": {
+        "closing": 2,
+        "cold_open": 2,
+        "general": 19,
+        "info_gathering": 4,
+        "objection_handling": 5
+      }
+    },
+    "sizes": {
+      "fp16_bytes": 8044981992,
+      "quant_bytes": 2709581448,
+      "fp16_gb": 8.045,
+      "quant_gb": 2.71,
+      "compression_ratio": 2.969,
+      "size_reduction_pct": 66.32
+    },
+    "fakequant_smoke": {
+      "enabled": true,
+      "probe_count": 5,
+      "baseline_path": "/workspace/Bonus/bonus2_quant/reports/modelopt_int4_fp16_probe.jsonl",
+      "modelopt_path": "/workspace/Bonus/bonus2_quant/reports/modelopt_int4_int4_awq_fakequant_probe.jsonl"
+    }
+  }
+}

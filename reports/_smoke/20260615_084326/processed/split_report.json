@@ -1,0 +1,107 @@
+{
+  "counts": {
+    "train": 277,
+    "val": 16,
+    "test": 15
+  },
+  "ratios": [
+    0.9,
+    0.05,
+    0.05
+  ],
+  "stratify_keys": [
+    "scenario",
+    "turn_bucket"
+  ],
+  "distribution": {
+    "train": {
+      "closing": 0.0072,
+      "cold_open": 0.0036,
+      "general": 0.9061,
+      "info_gathering": 0.0144,
+      "objection_handling": 0.0686
+    },
+    "val": {
+      "general": 0.9375,
+      "objection_handling": 0.0625
+    },
+    "test": {
+      "general": 0.8667,
+      "info_gathering": 0.0667,
+      "objection_handling": 0.0667
+    }
+  },
+  "leakage_check": {
+    "method": "minhash",
+    "threshold": 0.85,
+    "cross_split_dups": 0
+  },
+  "dedup": {
+    "exact_dropped": 0,
+    "minhash_threshold": 0.85,
+    "minhash_dropped": 0,
+    "minhash_clusters": 0,
+    "n_after_dedup": 308
+  },
+  "downsample": {
+    "m2_count": 5,
+    "ratio": 100,
+    "target_m1": 500,
+    "n_input_m1": 303,
+    "label_only": 22,
+    "keyword_only": 13,
+    "both": 1,
+    "energy_keyword_hits": 14,
+    "high_value_union": 36,
+    "filled_general": 267,
+    "final_m1": 303,
+    "m1_to_m2_ratio": 60.6,
+    "high_value_exceeds_target": false,
+    "energy_probe_baseline": 536,
+    "energy_keyword_deviation_vs_probe": -522
+  },
+  "effective_strata": {
+    "general|short": 287,
+    "objection_handling|short": 21
+  },
+  "merged_strata": {
+    "general|short": [
+      "general|short",
+      "closing|short",
+      "cold_open|short",
+      "info_gathering|short"
+    ]
+  },
+  "distribution_warnings": [
+    {
+      "split": "val",
+      "stratum": [
+        "general",
+        "short"
+      ],
+      "overall_share": 0.9058,
+      "split_share": 0.9375,
+      "deviation_pp": 3.17
+    },
+    {
+      "split": "test",
+      "stratum": [
+        "general",
+        "short"
+      ],
+      "overall_share": 0.9058,
+      "split_share": 0.8667,
+      "deviation_pp": 3.92
+    },
+    {
+      "split": "test",
+      "stratum": [
+        "info_gathering",
+        "short"
+      ],
+      "overall_share": 0.0162,
+      "split_share": 0.0667,
+      "deviation_pp": 5.04
+    }
+  ]
+}

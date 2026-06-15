@@ -1,0 +1,74 @@
+# M7 AWQ INT4 (W4A16) post-training quantization (design doc section 3-M7,
+# proposal section 4-C1). llm-compressor `oneshot` with an AWQ recipe; the
+# calibration set is sampled from the training domain (train.jsonl).
+#
+# Run inside the train container (GPU deps are container-only, design doc 5.2):
+#   docker compose -f docker/compose.yaml run --rm --entrypoint uv train \
+#     run python scripts/quant/quantize_awq.py --config configs/quant.yaml --smoke
+#
+# 4070 / 12GB memory note: the merged model is loaded on CPU (device_map: cpu) and
+# llm-compressor's `sequential` pipeline onloads ONE decoder block at a time to the
+# GPU for calibration, so peak GPU memory is a single block + its calibration
+# activations (a few GB), never the whole ~8GB model. CPU offload lands in WSL2 RAM
+# (host has 96GB, WSL2 default ~half -> ample). A naive whole-model .to("cuda")
+# would OOM and is intentionally avoided.
+
+seed: 42
+
+model:
+  # Merged dense BF16 model from M6. On this PC the M6 product lives under
+  # models/adapters/merged/ (the contract path in design doc 2.5 is models/merged/;
+  # pointed at the real location by user decision). Overridable with --merged-dir.
+  merged_dir: models/adapters/merged
+  dtype: bfloat16
+  # Load on CPU; the sequential calibration pipeline moves blocks to the GPU one at
+  # a time. "auto" (accelerate offload) is the alternative; "cpu" is the safest on
+  # the 12GB card while the display already uses ~3GB.
+  device_map: cpu
+
+# AWQ product directory consumed by M8/vLLM. NOTE: llm-compressor emits the
+# compressed-tensors format (config.json quant_method = "compressed-tensors"), which
+# vLLM auto-detects -- it is NOT the AutoAWQ format, so M8 must NOT force
+# `--quantization awq` (drop the flag / let vLLM auto-detect). The dir name reflects
+# the *algorithm* (AWQ), not the storage format.
+output_dir: models/quantized/awq
+
+# AWQ recipe: W4A16, asymmetric (zero-point), group_size 128 (user decision;
+# canonical AWQ). The "W4A16_ASYM" compressed-tensors preset already pins
+# group_size=128 + symmetric=False, so group_size is recorded here for the
+# manifest/guard and asserted against the preset rather than hardcoded in code.
+recipe:
+  scheme: W4A16_ASYM
+  group_size: 128
+  symmetric: false
+  targets: ["Linear"]
+  ignore: ["lm_head"]
+  duo_scaling: both          # AWQ scale search over both weight and activation stats
+
+calibration:
+  source_path: data/processed/train.jsonl
+  n_samples: 256             # full-run calibration size
+  smoke_n_samples: 32        # --smoke calibration size (pipeline connectivity)
+  max_seq_len: 768           # truncate calibration text (512-1024 window; VRAM/time control)
+  batch_size: 1              # one sequence at a time (memory-bound 4070)
+  pipeline: sequential       # per-block onload/offload calibration
+
+# Single-generation self-check after quantization (T7.3): the saved INT4 model must
+# reload via transformers and emit at least one token.
+self_check:
+  prompt: "Hi, I think my electricity bill is too high. Can you help me lower it?"
+  max_new_tokens: 32
+
+# 5-prompt FP16-vs-INT4 side-by-side (T7.4), full runs only. Generated greedily on
+# both the merged (FP16) and quantized (INT4) models for the completion report.
+probe:
+  enabled: true
+  prompts_path: tests/fixtures/quant_probe_prompts.jsonl
+  max_new_tokens: 96
+
+# Committed evidence (full runs only): the merged model + AWQ product dirs are
+# gitignored, so the manifest + a human-readable size/probe report are copied under
+# reports/training/ (mirrors how M4/M5/M6 commit their training evidence).
+report:
+  manifest_path: reports/training/quant_manifest.json
+  size_report_path: reports/training/quant_report.md

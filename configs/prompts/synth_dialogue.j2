@@ -1,0 +1,51 @@
+{#- synth_dialogue.j2 -- template version: v1 (keep META_TEMPLATE_VERSION in
+    src/sales_agent/data/synthesize.py in sync when editing).
+
+    Renders the user-turn instruction for the strong model to synthesize ONE
+    multi-turn energy sales dialogue as a JSON object. All task-specific prompt
+    content lives here; build_prompt() prepends a short generator system message
+    and wraps this render as the single user message. Variables come from
+    SynthTask.prompt_vars (see expand_task_matrix); `examples` is a list of
+    pre-serialized JSON seed dialogues for few-shot anchoring. -#}
+You are generating synthetic training data for an English-speaking energy sales
+voice agent that works for "ABC Energy", a residential and small-business
+electricity supplier.
+
+Produce ONE realistic, self-consistent multi-turn sales conversation for this
+exact configuration:
+
+- Scenario: {{ scenario }}{% if scenario_hint %} -- {{ scenario_hint }}{% endif %}
+- Customer persona: {{ persona }}
+{% if objection_type and objection_type != "none" %}- Primary customer objection: {{ objection_type }}
+{% endif %}- Desired conversation outcome: {{ outcome }}
+- Target length: about {{ n_turns }} assistant turns.
+{% if examples %}
+Study these example dialogues and match their style, brevity, and JSON format.
+Do NOT copy them -- invent a fresh conversation with different specifics:
+{% for ex in examples %}
+Example {{ loop.index }}:
+{{ ex }}
+{% endfor %}{% endif %}
+Output ONLY a single JSON object, no markdown fences and no commentary, with
+exactly this shape:
+
+  {"messages": [{"role": "system", "content": "..."},
+                {"role": "user", "content": "..."},
+                {"role": "assistant", "content": "..."}]}
+
+Hard requirements:
+1. messages[0] MUST be a "system" message (one or two sentences) establishing
+   the assistant as a professional, compliant ABC Energy sales agent suited to
+   this persona.
+2. After the system message, strictly alternate "user" (the customer) and
+   "assistant" (the agent): start with "user" and end with "assistant". Aim for
+   about {{ n_turns }} assistant turns.
+3. The assistant MUST NOT invent or quote any specific price, rate, tariff,
+   discount figure, or per-unit cost. Forbidden examples: "$0.09", "9 cents per
+   kWh", "12 p/kWh", "save $50 a month". When price comes up, the assistant
+   gathers usage details and offers to prepare a personalized quote instead of
+   stating a number. The customer MAY mention their own bill amounts.
+4. Keep every reply short and natural for a phone call (1-3 sentences).
+5. English only. Make the dialogue specific to the scenario below.
+
+Scenario guidance: {{ scenario_directive }}

@@ -1,0 +1,27 @@
+{
+  "sources": {
+    "hf:goendalf666/sales-conversations": {
+      "input": 720,
+      "output": 712,
+      "dropped": {
+        "duplicate": 8
+      },
+      "raw_rows": 120
+    }
+  },
+  "totals": {
+    "input": 720,
+    "output": 712,
+    "dropped": {
+      "duplicate": 8
+    }
+  },
+  "pii_replacements": 0,
+  "scenario_distribution": {
+    "closing": 2,
+    "cold_open": 1,
+    "general": 654,
+    "info_gathering": 9,
+    "objection_handling": 46
+  }
+}

@@ -1,0 +1,86 @@
+# M3 split & leakage-prevention config (design doc section 3-M3, proposal 4-A3).
+# CLI: uv run python scripts/data/split.py --config configs/split.yaml [--smoke]
+#
+# Runtime order (enforced by the CLI): merge M1+M2 -> global exact dedup ->
+# global MinHash near-dedup -> M1 downsample (T3.0) -> stratified split ->
+# leakage assertion. Near-dedup is global and BEFORE the split; splitting is by
+# complete dialogue.
+
+seed: 42
+output_dir: data/processed
+
+# Per-input record cap when running with --smoke (pure-CPU connectivity check).
+smoke_limit: 300
+
+# Inputs. `role: m1` = real/public data (eligible for downsampling); `role: m2`
+# = synthetic energy dialogues (NEVER downsampled). Identity is also derived at
+# runtime from each record's `source` (synthetic:* => M2), so role is advisory.
+inputs:
+  - path: data/interim/normalized.jsonl
+    role: m1
+  - path: data/interim/synthetic_dialogues.jsonl
+    role: m2
+
+# Global near-duplicate dedup (datasketch MinHash + LSH).
+dedup:
+  threshold: 0.85
+  num_perm: 128
+  shingle_size: 5
+
+# T3.0 M1 downsampling. target_m1 = round(ratio * surviving_M2_count).
+# ratio is configurable for later M9/M10 A/B over data mixes:
+#   2.0 -> ~2x M2 (default), 3.0 -> ~3x, 0 -> M2-only (drop all M1).
+# High-value records (always kept) = union of two orthogonal axes:
+#   (a) scenario in high_value_scenarios, (b) energy_keywords word-boundary hit.
+downsample:
+  ratio: 2.0
+  high_value_scenarios:
+    - objection_handling
+    - info_gathering
+  # Hit count of the user's ORIGINAL loose substring probe on full M1 (20732),
+  # recorded so split_report can report the deviation of the tightened matcher.
+  # Original probe list: energy, electric, kwh, kilowatt, utility, power bill,
+  # supplier, tariff, solar, gas bill, provider, renewable (substring).
+  energy_probe_baseline: 536
+  # Tightened, reproducible energy vocabulary, matched on whole-dialogue text
+  # with \b word boundaries (NOT loose substring). Generic words that over-fire
+  # on substring probes are intentionally excluded: bare `provider`/`supplier`/
+  # `utility` (hit "service provider"), `electric` substring (hit "electrician"
+  # -- the \b form is kept and does not). `energy` is retained as the domain
+  # term; note that in the current generic M1 corpus most `energy` hits are
+  # "energy levels"/supplements, not utility energy (logged in split_report).
+  energy_keywords:
+    - energy
+    - electricity
+    - electric
+    - kwh
+    - kilowatt
+    - kilowatt-hour
+    - watt
+    - megawatt
+    - power bill
+    - electricity bill
+    - gas bill
+    - energy bill
+    - tariff
+    - tariffs
+    - solar
+    - renewable
+    - renewables
+    - natural gas
+    - off-peak
+    - peak rate
+    - power grid
+    - utility provider
+    - energy provider
+    - energy supplier
+    - electricity supplier
+    - gas supplier
+
+# Stratified split by (scenario, turn_bucket); strata < min_stratum are merged.
+split:
+  ratios: [0.9, 0.05, 0.05]
+  min_stratum: 20
+
+# Per-stratum share deviation above this (percentage points) emits a WARN.
+dist_warn_pp: 3.0

@@ -1,0 +1,67 @@
+# M8 vLLM serving config (design doc section 3-M8, proposal section 4-C2/C3).
+#
+# SINGLE SOURCE OF TRUTH for the serve stage. docker/compose.yaml mirrors the
+# `engine` / `model` values literally so `docker compose up serve` works
+# standalone; tests/test_serve_config.py parses compose.yaml and asserts the two
+# agree, so the numbers can never drift between the two files (no scattered magic
+# numbers -- design doc 1.3). scripts/serving/serve.sh reads the `server` block
+# (host/port/health) and the host model dir for the pre-flight + health check.
+#
+# Run (from repo root, Git Bash / WSL):
+#   bash scripts/serving/serve.sh           # up -d serve + /health poll
+#   docker compose -f docker/compose.yaml up serve   # standalone (same args)
+
+seed: 42
+
+# Official vLLM OpenAI-compatible server image, pinned (design doc 5.1: serve uses
+# the official image, not a self-built one).
+image: vllm/vllm-openai:v0.10.2
+
+model:
+  # AWQ INT4 product from M7. NOTE: this is compressed-tensors / pack-quantized
+  # format (config.json quant_method = "compressed-tensors"), NOT the AutoAWQ
+  # format -- see engine.quantization below. Host (repo-relative) path; load_config
+  # resolves it to an absolute path so serve.sh can check it exists.
+  dir: models/quantized/awq
+  # The same dir as seen inside the container (compose mounts ../models -> /models).
+  # Plain string (no path/dir/file key suffix) so load_config leaves it literal --
+  # an absolute POSIX path must not be rewritten to a Windows host path.
+  in_container: /models/quantized/awq
+  # OpenAI `model` field that M9/M10/M11 send to the endpoint (--served-model-name).
+  served_name: sales-agent-awq
+
+engine:
+  # --- 4070 12GB tuning (re-tuned from the design-doc defaults for this card) ---
+  # The 4070 also drives the display (~4GB used), leaving ~7.9GB free. The design
+  # default 0.90 fights the display and OOMs; 0.55 is the measured starting point.
+  # Final values recorded here after on-hardware tuning (completion report).
+  gpu_memory_utilization: 0.55
+  # The model supports max_position_embeddings=262144; a voice sales dialogue needs
+  # very little context, and a smaller KV cache leaves room on the 12GB card.
+  max_model_len: 3072
+  # Concurrency cap (continuous batching). 16 matches the demo's 16-way load; raise
+  # only if VRAM headroom allows.
+  max_num_seqs: 16
+  # Reuse the shared system-prompt KV across requests.
+  enable_prefix_caching: true
+  # M7 output is compressed-tensors; vLLM auto-detects it from config.json's
+  # quant_method, so NO --quantization flag is passed. Forcing `awq` (AutoAWQ) here
+  # would misparse the weights and fail to load (M7 handoff). null => flag omitted.
+  quantization: null
+  # Qwen3 chat template injects an empty <think></think> prefix into assistant turns
+  # (risk board 2026-06-14, Option A). The qwen3 reasoning parser moves it into
+  # message.reasoning_content so message.content is clean -- handled at the serve
+  # layer here rather than stripped downstream. If a vLLM build lacks this parser,
+  # fall back to M9/M10 stripping before scoring (documented in the report).
+  reasoning_parser: qwen3
+
+server:
+  host: 0.0.0.0
+  port: 8000
+  # serve.sh polls http://127.0.0.1:<port><health_endpoint> until 200 or timeout,
+  # then exits 3 on timeout (design doc 1.4 exit-code: 3 = external dep fail). Key is
+  # "health_endpoint" (no path/dir/file suffix) so load_config leaves "/health"
+  # literal -- a *_path key would be rewritten to an absolute host path.
+  health_endpoint: /health
+  health_timeout_s: 120
+  startup_poll_interval_s: 3

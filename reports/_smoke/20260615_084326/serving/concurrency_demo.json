@@ -1,0 +1,59 @@
+{
+  "endpoint": "http://127.0.0.1:8000/v1",
+  "model": "sales-agent-awq",
+  "n_requests": 4,
+  "max_tokens": 256,
+  "single_latency_s": 0.4092,
+  "single_stream_tok_s": 114.86,
+  "concurrent_wall_s": 0.6729,
+  "serial_estimate_s": 1.6368,
+  "batching_speedup": 2.432,
+  "throughput_tok_s": 277.89,
+  "throughput_gain_vs_single": 2.42,
+  "aggregate": {
+    "n_requests": 4,
+    "n_with_output": 4,
+    "ttft_mean_s": 0.18853750001289882,
+    "ttft_p50_s": 0.22514990001218393,
+    "ttft_p95_s": 0.2299703250231687,
+    "total_mean_s": 0.6276831500144908,
+    "total_p50_s": 0.6259269000147469,
+    "total_p95_s": 0.6560823500127299,
+    "total_output_tokens": 187
+  },
+  "per_request": [
+    {
+      "id": "dlg-d0ee1a595d86",
+      "ttft_s": 0.2217,
+      "total_s": 0.6277,
+      "itl_mean_s": 0.00967,
+      "n_chunks": 43,
+      "n_output_tokens": 47
+    },
+    {
+      "id": "dlg-b81763953222",
+      "ttft_s": 0.2302,
+      "total_s": 0.5978,
+      "itl_mean_s": 0.00967,
+      "n_chunks": 39,
+      "n_output_tokens": 43
+    },
+    {
+      "id": "dlg-15adb2190982",
+      "ttft_s": 0.2286,
+      "total_s": 0.6611,
+      "itl_mean_s": 0.00961,
+      "n_chunks": 46,
+      "n_output_tokens": 50
+    },
+    {
+      "id": "dlg-0829a2f26f85",
+      "ttft_s": 0.0736,
+      "total_s": 0.6241,
+      "itl_mean_s": 0.01223,
+      "n_chunks": 46,
+      "n_output_tokens": 47
+    }
+  ],
+  "generated_at": "2026-06-15T08:50:57"
+}

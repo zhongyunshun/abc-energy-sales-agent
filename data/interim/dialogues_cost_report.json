@@ -1,0 +1,63 @@
+{
+  "mode": "dialogues",
+  "model": "google/gemini-2.5-flash",
+  "note": "Merged dataset: batch A (1387, committed 4807ec3) + batch B (2964, expand run); 0 id overlap.",
+  "total_records": 4351,
+  "records_by_scenario": {
+    "closing": 578,
+    "cold_open": 600,
+    "general": 393,
+    "info_gathering": 1335,
+    "objection_handling": 1445
+  },
+  "total_estimated_cost_usd": 10.7357,
+  "runs": [
+    {
+      "batch": "A",
+      "records": 1387,
+      "abandoned": 113,
+      "est_cost_usd": 3.4166,
+      "usage": {
+        "requests": 2185,
+        "retries": 0,
+        "failures": 0,
+        "prompt_tokens": 2584453,
+        "completion_tokens": 1056510,
+        "total_tokens": 3640963,
+        "requests_by_model": {
+          "google/gemini-2.5-flash": 2185
+        }
+      },
+      "errors_by_kind": {
+        "not_json": 68,
+        "semantic": 7,
+        "schema": 33,
+        "price_in_assistant": 5
+      }
+    },
+    {
+      "batch": "B",
+      "records": 2964,
+      "abandoned": 236,
+      "est_cost_usd": 7.3191,
+      "usage": {
+        "requests": 4703,
+        "retries": 0,
+        "failures": 0,
+        "prompt_tokens": 5517899,
+        "completion_tokens": 2265473,
+        "total_tokens": 7783372,
+        "requests_by_model": {
+          "google/gemini-2.5-flash": 4703
+        }
+      },
+      "errors_by_kind": {
+        "not_json": 169,
+        "schema": 46,
+        "semantic": 13,
+        "price_in_assistant": 7,
+        "too_few_turns": 1
+      }
+    }
+  ]
+}

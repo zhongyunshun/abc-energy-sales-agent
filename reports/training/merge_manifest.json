@@ -1,0 +1,56 @@
+{
+  "created_at": "2026-06-14T01:37:24.148256+00:00",
+  "git_commit": "78033631f916e610aa7ed349d01e50ed34f29d1e",
+  "inputs": [
+    {
+      "path": "/u1/x2jian/neo/sales_agent/models/adapters/dpo/adapter_model.safetensors",
+      "sha256": "fb06946ce8c14b7fe7c26b294a092d5e56098a43c437d75c40fdf41a311283ab",
+      "size_bytes": 264308896
+    }
+  ],
+  "config": {
+    "seed": 42,
+    "model": {
+      "name": "unsloth/Qwen3-4B-Instruct-2507",
+      "dtype": "bfloat16",
+      "device_map": "auto"
+    },
+    "adapter": "models/adapters/dpo",
+    "output_dir": "/u1/x2jian/neo/sales_agent/models/merged",
+    "consistency": {
+      "prompts_path": "/u1/x2jian/neo/sales_agent/tests/fixtures/merge_consistency_prompts.jsonl",
+      "default_system": null,
+      "max_new_tokens": 128,
+      "match_mode": "exact",
+      "prefix_n": 64
+    },
+    "report": {
+      "manifest_path": "/u1/x2jian/neo/sales_agent/reports/training/merge_manifest.json",
+      "consistency_report_path": "/u1/x2jian/neo/sales_agent/reports/training/merge_consistency.md"
+    },
+    "smoke": {
+      "n_prompts": 2,
+      "max_new_tokens": 16
+    }
+  },
+  "stats": {
+    "adapter": "/u1/x2jian/neo/sales_agent/models/adapters/dpo",
+    "base_model": "unsloth/Qwen3-4B-Instruct-2507",
+    "merge_dtype": "bfloat16",
+    "device_map": "auto",
+    "merged_on_cpu": false,
+    "smoke": false,
+    "max_new_tokens": 128,
+    "merged_size_gb": 8.045,
+    "config_transformers_version_dropped": true,
+    "tokenizer_reload_ok": true,
+    "consistency_check": {
+      "mode": "exact",
+      "prefix_n": null,
+      "n_total": 8,
+      "n_mismatch": 0,
+      "consistent": true,
+      "mismatched_ids": []
+    }
+  }
+}

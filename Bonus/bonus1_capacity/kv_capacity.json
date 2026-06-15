@@ -1,0 +1,60 @@
+{
+  "model_params": {
+    "model_type": "qwen3",
+    "num_layers": 36,
+    "num_attention_heads": 32,
+    "num_kv_heads": 8,
+    "head_dim": 128,
+    "hidden_size": 2560,
+    "max_position_embeddings": 262144
+  },
+  "weight_sizes_gib": {
+    "awq_int4_gib": 2.4829646795988083,
+    "bf16_gib": 7.492473341524601
+  },
+  "assumptions": {
+    "a100_physical_gib": 40.0,
+    "gpu_mem_util": 0.9,
+    "non_kv_overhead_gib": 2.0,
+    "kv_dtype_bytes": 2,
+    "target_sessions": 1000
+  },
+  "kv_bytes_per_token": 147456,
+  "kv_kib_per_token": 144.0,
+  "kv_budget_gib": {
+    "awq_int4": 31.51703532040119,
+    "bf16": 26.5075266584754
+  },
+  "worst_case_full_context": [
+    {
+      "context_tokens": 2048,
+      "kv_per_session_mib": 288.0,
+      "kv_1000_sessions_gib": 281.25,
+      "max_sessions_awq": 112,
+      "max_sessions_bf16": 94,
+      "a100_cards_for_1000_awq": 8.923745432932423
+    },
+    {
+      "context_tokens": 4096,
+      "kv_per_session_mib": 576.0,
+      "kv_1000_sessions_gib": 562.5,
+      "max_sessions_awq": 56,
+      "max_sessions_bf16": 47,
+      "a100_cards_for_1000_awq": 17.847490865864845
+    }
+  ],
+  "voice_realistic": {
+    "active_fraction": 0.15,
+    "effective_ctx_tokens": 512,
+    "inflight_sessions": 150,
+    "kv_demand_gib": 10.546875,
+    "cards_memory_bound": 0.33464045373496587,
+    "m11_sat_tok_s_4070": 835.0,
+    "a100_compute_mult": 5.0,
+    "a100_tok_s_est": 4175.0,
+    "per_session_tok_s": 3.2,
+    "agg_tok_s_1000": 3200.0,
+    "cards_compute_bound": 0.7664670658682635,
+    "a100_cards_for_1000_sessions": 0.7664670658682635
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "created_at": "2026-06-15T02:20:18.391188+00:00",
+  "git_commit": "b383d7d60c47d744bf719c82b846c9857b6ede40",
+  "inputs": [
+    {
+      "path": "C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\data\\processed\\test.jsonl",
+      "sha256": "353701a0442ec86521df7a0635f19be797bcf3fa76ff25b6e6055dc8a931ef0e",
+      "size_bytes": 745742
+    },
+    {
+      "path": "C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\configs\\bench.yaml",
+      "sha256": "307291f67e4e443a103a93f89c9ba141aa82714c5a1443b70f106bd4826b1291",
+      "size_bytes": 3007
+    }
+  ],
+  "config": {
+    "tiers": [
+      1,
+      4,
+      8,
+      16,
+      32
+    ],
+    "run_time_s": 120,
+    "warmup_s": 15,
+    "host": "http://127.0.0.1:8000",
+    "smoke": false,
+    "generation": {
+      "temperature": 0.0,
+      "max_tokens": 256
+    }
+  },
+  "stats": {
+    "wall_seconds": 602.3,
+    "tiers": [
+      {
+        "concurrency": 1,
+        "ttft_p50": 45.571088790893555,
+        "ttft_p95": 90.12429714202881,
+        "itl_p50": 9.175601758454976,
+        "itl_p95": 9.651113894520973,
+        "throughput_tok_s": 102.0952380952381,
+        "req_s": 2.5047619047619047,
+        "error_rate": 0.0,
+        "n_total": 263,
+        "n_ok": 263,
+        "n_failed": 0,
+        "steady_window_s": 105
+      },
+      {
+        "concurrency": 4,
+        "ttft_p50": 55.150747299194336,
+        "ttft_p95": 112.50125169754028,
+        "itl_p50": 11.241079099981079,
+        "itl_p95": 12.334085453750433,
+        "throughput_tok_s": 334.16190476190474,
+        "req_s": 8.0,
+        "error_rate": 0.0,
+        "n_total": 840,
+        "n_ok": 840,
+        "n_failed": 0,
+        "steady_window_s": 105
+      },
+      {
+        "concurrency": 8,
+        "ttft_p50": 68.19033622741699,
+        "ttft_p95": 122.24397659301758,
+        "itl_p50": 12.951146001401156,
+        "itl_p95": 14.991141217095512,
+        "throughput_tok_s": 575.9047619047619,
+        "req_s": 13.780952380952382,
+        "error_rate": 0.0,
+        "n_total": 1447,
+        "n_ok": 1447,
+        "n_failed": 0,
+        "steady_window_s": 105
+      },
+      {
+        "concurrency": 16,
+        "ttft_p50": 112.56527900695801,
+        "ttft_p95": 177.66821384429932,
+        "itl_p50": 18.294909061529697,
+        "itl_p95": 21.167682404683823,
+        "throughput_tok_s": 820.1904761904761,
+        "req_s": 19.723809523809525,
+        "error_rate": 0.0,
+        "n_total": 2071,
+        "n_ok": 2071,
+        "n_failed": 0,
+        "steady_window_s": 105
+      },
+      {
+        "concurrency": 32,
+        "ttft_p50": 867.7265644073486,
+        "ttft_p95": 1034.3358039855957,
+        "itl_p50": 18.204286694526672,
+        "itl_p95": 21.278696091144116,
+        "throughput_tok_s": 835.3142857142857,
+        "req_s": 20.085714285714285,
+        "error_rate": 0.0,
+        "n_total": 2109,
+        "n_ok": 2109,
+        "n_failed": 0,
+        "steady_window_s": 105
+      }
+    ],
+    "fp16_comparison_gap": "FP16 vs INT4 TTFT/ITL comparison NOT measured: the merged FP16 model (8.045GB) does not fit alongside the display on the 4070 (~7.9GB free), so only the INT4 (AWQ/compressed-tensors) service is benchmarked here. Size/theory comparison: M7 manifest (8.045GB FP16 -> 2.666GB INT4, 3.02x); quality: M7's 5 FP16-vs-INT4 probes (no visible regression). Handed to M12 README."
+  }
+}

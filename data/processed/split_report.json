@@ -1,0 +1,82 @@
+{
+  "counts": {
+    "train": 11748,
+    "val": 655,
+    "test": 650
+  },
+  "ratios": [
+    0.9,
+    0.05,
+    0.05
+  ],
+  "stratify_keys": [
+    "scenario",
+    "turn_bucket"
+  ],
+  "distribution": {
+    "train": {
+      "closing": 0.0451,
+      "cold_open": 0.0472,
+      "general": 0.6042,
+      "info_gathering": 0.1266,
+      "objection_handling": 0.1769
+    },
+    "val": {
+      "closing": 0.0458,
+      "cold_open": 0.0489,
+      "general": 0.6015,
+      "info_gathering": 0.1267,
+      "objection_handling": 0.1771
+    },
+    "test": {
+      "closing": 0.0446,
+      "cold_open": 0.0462,
+      "general": 0.6062,
+      "info_gathering": 0.1262,
+      "objection_handling": 0.1769
+    }
+  },
+  "leakage_check": {
+    "method": "minhash",
+    "threshold": 0.85,
+    "cross_split_dups": 0
+  },
+  "dedup": {
+    "exact_dropped": 0,
+    "minhash_threshold": 0.85,
+    "minhash_dropped": 24,
+    "minhash_clusters": 21,
+    "n_after_dedup": 25059
+  },
+  "downsample": {
+    "m2_count": 4351,
+    "ratio": 2.0,
+    "target_m1": 8702,
+    "n_input_m1": 20708,
+    "label_only": 1170,
+    "keyword_only": 363,
+    "both": 11,
+    "energy_keyword_hits": 374,
+    "high_value_union": 1544,
+    "filled_general": 7158,
+    "final_m1": 8702,
+    "m1_to_m2_ratio": 2.0,
+    "high_value_exceeds_target": false,
+    "energy_probe_baseline": 536,
+    "energy_keyword_deviation_vs_probe": -162
+  },
+  "effective_strata": {
+    "closing|short": 362,
+    "closing|mid": 227,
+    "cold_open|short": 408,
+    "cold_open|mid": 209,
+    "general|short": 7744,
+    "general|mid": 142,
+    "info_gathering|short": 1269,
+    "info_gathering|mid": 383,
+    "objection_handling|short": 1746,
+    "objection_handling|mid": 563
+  },
+  "merged_strata": {},
+  "distribution_warnings": []
+}

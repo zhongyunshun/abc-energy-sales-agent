@@ -1,0 +1,89 @@
+{
+  "created_at": "2026-06-13T22:43:23.815966+00:00",
+  "git_commit": "841a470a9f372103802480f4f54e9e24d96484fb",
+  "inputs": [
+    {
+      "path": "/u1/x2jian/neo/sales_agent/data/interim/preference_pairs.jsonl",
+      "sha256": "8794e89349e5865b4b1fbfafa0cbd7fdf09a007c024a24147469264a4d9e6b8c",
+      "size_bytes": 341641
+    },
+    {
+      "path": "models/adapters/sft/adapter_model.safetensors",
+      "sha256": "5fbb71271ad0bf0a6fe041b549e1a2b47b5339300845f842e82e265da4ab3110",
+      "size_bytes": 264308896
+    }
+  ],
+  "config": {
+    "seed": 42,
+    "model": {
+      "name": "unsloth/Qwen3-4B-Instruct-2507",
+      "max_seq_length": 2048,
+      "load_in_4bit": false,
+      "dtype": null
+    },
+    "sft_adapter": "models/adapters/sft",
+    "ref": {
+      "scheme": "two_adapter",
+      "policy_adapter_name": "default",
+      "ref_adapter_name": "reference"
+    },
+    "dpo": {
+      "output_dir": "/u1/x2jian/neo/sales_agent/models/adapters/dpo",
+      "beta": 0.1,
+      "loss_type": "sigmoid",
+      "num_train_epochs": 1,
+      "per_device_train_batch_size": 2,
+      "gradient_accumulation_steps": 8,
+      "learning_rate": 5e-06,
+      "lr_scheduler_type": "cosine",
+      "warmup_ratio": 0.1,
+      "optim": "adamw_torch",
+      "weight_decay": 0.0,
+      "max_grad_norm": 1.0,
+      "max_length": 2048,
+      "max_prompt_length": 1024,
+      "logging_steps": 1,
+      "save_strategy": "no",
+      "bf16": true,
+      "gradient_checkpointing": false
+    },
+    "data": {
+      "pref_path": "/u1/x2jian/neo/sales_agent/data/interim/preference_pairs.jsonl",
+      "default_system": null
+    },
+    "probes": {
+      "path": "/u1/x2jian/neo/sales_agent/tests/fixtures/dpo_probes.jsonl",
+      "max_new_tokens": 200,
+      "smoke_n": 2
+    },
+    "logging": {
+      "report_to_wandb": true,
+      "wandb_project": "sales-agent-dpo",
+      "tensorboard_dir": "/u1/x2jian/neo/sales_agent/reports/training/tb_dpo"
+    },
+    "report": {
+      "loss_curve_path": "/u1/x2jian/neo/sales_agent/reports/training/dpo_loss.png",
+      "margins_curve_path": "/u1/x2jian/neo/sales_agent/reports/training/dpo_margins.png",
+      "behavior_diff_path": "/u1/x2jian/neo/sales_agent/reports/training/dpo_behavior_diff.md"
+    },
+    "smoke": {
+      "max_steps": 10,
+      "n_pairs": 32
+    }
+  },
+  "stats": {
+    "n_pairs": 300,
+    "n_probes": 20,
+    "smoke": false,
+    "global_steps": 19,
+    "peak_vram_gb": 27.865,
+    "final_train_loss": 0.44217002391815186,
+    "final_reward_margin": 1.157342791557312,
+    "final_reward_accuracy": 1.0,
+    "beta": 0.1,
+    "ref_scheme": "two_adapter",
+    "base_load_in_4bit": false,
+    "bf16": true,
+    "train_runtime_s": 64.3124
+  }
+}

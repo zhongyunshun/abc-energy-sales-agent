@@ -1,0 +1,118 @@
+{
+  "created_at": "2026-06-14T04:46:44.306747+00:00",
+  "git_commit": "360cdd376d5d42b999097c32aa7a33cf6776d79b",
+  "inputs": [
+    {
+      "path": "/workspace/models/adapters/merged/model-00001-of-00002.safetensors",
+      "sha256": "0f6a7c154cb1302c87b66aad19cbb5e399c4f55d1aa5f1dac024310e0a90ca92",
+      "size_bytes": 4967215360
+    },
+    {
+      "path": "/workspace/models/adapters/merged/model-00002-of-00002.safetensors",
+      "sha256": "219f4fd9b6a78e037dffb6c478fbeff02d64bbd81eb714bdf60a4512fe616b02",
+      "size_bytes": 3077766632
+    },
+    {
+      "path": "/workspace/data/processed/train.jsonl",
+      "sha256": "cd9d6669892c8f2b77369e6b88edcfd27ef5f5299c4fad569a4f2c34e8c178fc",
+      "size_bytes": 13671329
+    }
+  ],
+  "config": {
+    "seed": 42,
+    "model": {
+      "merged_dir": "/workspace/models/adapters/merged",
+      "dtype": "bfloat16",
+      "device_map": "cpu"
+    },
+    "output_dir": "/workspace/models/quantized/awq",
+    "recipe": {
+      "scheme": "W4A16_ASYM",
+      "group_size": 128,
+      "symmetric": false,
+      "targets": [
+        "Linear"
+      ],
+      "ignore": [
+        "lm_head"
+      ],
+      "duo_scaling": "both"
+    },
+    "calibration": {
+      "source_path": "/workspace/data/processed/train.jsonl",
+      "n_samples": 256,
+      "smoke_n_samples": 32,
+      "max_seq_len": 768,
+      "batch_size": 1,
+      "pipeline": "sequential"
+    },
+    "self_check": {
+      "prompt": "Hi, I think my electricity bill is too high. Can you help me lower it?",
+      "max_new_tokens": 32
+    },
+    "probe": {
+      "enabled": true,
+      "prompts_path": "/workspace/tests/fixtures/quant_probe_prompts.jsonl",
+      "max_new_tokens": 96
+    },
+    "report": {
+      "manifest_path": "/workspace/reports/training/quant_manifest.json",
+      "size_report_path": "/workspace/reports/training/quant_report.md"
+    }
+  },
+  "stats": {
+    "merged_dir": "/workspace/models/adapters/merged",
+    "smoke": false,
+    "recipe": {
+      "scheme": "W4A16_ASYM",
+      "group_size": 128,
+      "symmetric": false,
+      "targets": [
+        "Linear"
+      ],
+      "ignore": [
+        "lm_head"
+      ],
+      "duo_scaling": "both"
+    },
+    "calibration": {
+      "n_requested": 256,
+      "n_selected": 256,
+      "n_input": 11748,
+      "seed": 42,
+      "per_stratum": {
+        "closing|mid": 4,
+        "closing|short": 7,
+        "cold_open|mid": 4,
+        "cold_open|short": 8,
+        "general|mid": 3,
+        "general|short": 152,
+        "info_gathering|mid": 8,
+        "info_gathering|short": 25,
+        "objection_handling|mid": 11,
+        "objection_handling|short": 34
+      },
+      "per_scenario": {
+        "closing": 11,
+        "cold_open": 12,
+        "general": 155,
+        "info_gathering": 33,
+        "objection_handling": 45
+      }
+    },
+    "max_seq_len": 768,
+    "device_map": "cpu",
+    "pipeline": "sequential",
+    "sizes": {
+      "fp16_bytes": 8044981992,
+      "int4_bytes": 2666063024,
+      "fp16_gb": 8.045,
+      "int4_gb": 2.666,
+      "compression_ratio": 3.018,
+      "size_reduction_pct": 66.86
+    },
+    "config_transformers_version_dropped": true,
+    "self_check_ok": true,
+    "self_check_sample": "<think>\n\n</think>\n\nOf course! I can assist you in finding ways to reduce your electricity costs. Could you tell me more about your current usage and any specific"
+  }
+}

@@ -1,0 +1,44 @@
+{#- synth_preference.j2 -- template version: v1 (keep META_TEMPLATE_VERSION in
+    src/sales_agent/data/synthesize.py in sync when editing).
+
+    Renders the instruction to synthesize ONE DPO preference example: a shared
+    context plus a compliant "chosen" reply and a deliberately flawed
+    "rejected" reply that exhibits a named failure mode. Variables come from
+    SynthTask.prompt_vars (see expand_task_matrix); `examples` is a list of
+    pre-serialized JSON seed pairs for few-shot anchoring. -#}
+You are generating synthetic preference data used to align an English-speaking
+energy sales voice agent for "ABC Energy", a residential and small-business
+electricity supplier.
+
+Create ONE preference example that targets this failure mode:
+"{{ failure_mode }}" ({{ failure_mode_desc }}).
+
+- Customer persona: {{ persona }}
+- Conversation context theme: {{ context_scenario }}
+{% if examples %}
+Study these example preference pairs and match their style and JSON format. Do
+NOT copy them -- invent a fresh example with different specifics:
+{% for ex in examples %}
+Example {{ loop.index }}:
+{{ ex }}
+{% endfor %}{% endif %}
+Output ONLY a single JSON object, no markdown fences and no commentary, with
+exactly this shape:
+
+  {"context": [{"role": "user", "content": "..."}, ...],
+   "chosen": "...",
+   "rejected": "..."}
+
+Requirements:
+1. "context" is the conversation so far: an OPTIONAL leading "system" message,
+   then alternating "user"/"assistant", and it MUST end with a "user" message
+   that naturally sets up the failure mode. Use 1 to 3 user turns total.
+2. "chosen" is the ideal next assistant reply: professional, compliant,
+   genuinely helpful, and it NEVER invents a specific price, rate, tariff, or
+   per-unit cost (no numbers like "9 cents per kWh" or "$50 a month").
+3. "rejected" is a realistically bad next assistant reply that clearly exhibits
+   the "{{ failure_mode }}" failure mode:
+{{ rejected_directive }}
+4. "chosen" and "rejected" must be clearly DIFFERENT replies, not paraphrases of
+   each other.
+5. Keep replies short and natural for a phone call. English only.

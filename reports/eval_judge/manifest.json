@@ -1,0 +1,215 @@
+{
+  "created_at": "2026-06-14T21:58:29.064110+00:00",
+  "git_commit": "565a0bdc7042d6e34bcb3fa8ce6cdc86f0ff1527",
+  "inputs": [
+    {
+      "path": "C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\reports\\eval_offline\\base\\results.jsonl",
+      "sha256": "a849bb2b8184a9658c69e3e50f038a3d652c4cd0c1fae61dcd64ac5cff43f295",
+      "size_bytes": 1195840
+    },
+    {
+      "path": "C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\reports\\eval_offline\\sft\\results.jsonl",
+      "sha256": "52881ebeab2d730ac06673dd50460023cfcf4172d0bdcaea9ccac21a39131661",
+      "size_bytes": 783927
+    },
+    {
+      "path": "C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\reports\\eval_offline\\dpo\\results.jsonl",
+      "sha256": "ad581d5959a6147ff22ab09855e14cb904726c5401a26a1ddf27fa056da1ee8d",
+      "size_bytes": 780721
+    }
+  ],
+  "config": {
+    "seed": 42,
+    "inputs": [
+      "reports/eval_offline/base",
+      "reports/eval_offline/sft",
+      "reports/eval_offline/dpo"
+    ],
+    "output_dir": "C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\reports\\eval_judge",
+    "prompt_template_path": "C:\\Users\\zhong\\Documents\\Python Projects\\sales_agent\\configs\\prompts\\judge.j2",
+    "judge_models": [
+      "anthropic/claude-sonnet-4.6",
+      "openai/gpt-5.4"
+    ],
+    "sampling": {
+      "n_samples": 100
+    },
+    "temperature": 0.0,
+    "max_tokens": 512,
+    "max_retries": 2,
+    "client_max_retries": 3,
+    "concurrency": 8,
+    "use_json_mode": false,
+    "dimensions": [
+      "coherence",
+      "sales_logic",
+      "professionalism",
+      "hallucination"
+    ],
+    "score_min": 1,
+    "score_max": 5,
+    "no_diff_threshold": 0.3,
+    "smoke": {
+      "n_samples": 5
+    },
+    "pricing": {
+      "anthropic/claude-sonnet-4.6": {
+        "input_per_m": 3.0,
+        "output_per_m": 15.0
+      },
+      "openai/gpt-5.4": {
+        "input_per_m": 2.5,
+        "output_per_m": 15.0
+      }
+    }
+  },
+  "stats": {
+    "judge_models": [
+      "anthropic/claude-sonnet-4.6",
+      "openai/gpt-5.4"
+    ],
+    "n_per_group": 100,
+    "model_tags": [
+      "base",
+      "sft",
+      "dpo"
+    ],
+    "sample_ids": [
+      "dlg-0ea75315d4e6",
+      "dlg-10b47833cd06",
+      "dlg-10f83f2278b7",
+      "dlg-16e08f45f394",
+      "dlg-19a8f92ae6d0",
+      "dlg-1ccb63d533a0",
+      "dlg-1f5c0ee0c735",
+      "dlg-21a3d5dab249",
+      "dlg-21ebb153e872",
+      "dlg-2b43987911c0",
+      "dlg-2c2153056e9e",
+      "dlg-308ab0123acb",
+      "dlg-3270feaf47ca",
+      "dlg-33968854d4fe",
+      "dlg-357b5bc53bad",
+      "dlg-36c835cbbe71",
+      "dlg-3bf13089296b",
+      "dlg-3f068be1b57b",
+      "dlg-413414cd57c0",
+      "dlg-4135a77c8d83",
+      "dlg-4215f2a4684b",
+      "dlg-4246a282a30a",
+      "dlg-434ab20e5c8c",
+      "dlg-44ea943d4715",
+      "dlg-4a6a4d7abda5",
+      "dlg-4ad23ee9b19e",
+      "dlg-4cdfa2f8c49e",
+      "dlg-531060bf4448",
+      "dlg-536829a2b8fb",
+      "dlg-5a4863c901e5",
+      "dlg-63b8a44c9c1e",
+      "dlg-6a0c090c0dc0",
+      "dlg-6a9e90a1b716",
+      "dlg-6da58301b1c9",
+      "dlg-705b552cb292",
+      "dlg-716c82d7de12",
+      "dlg-77e30b98c165",
+      "dlg-795475642331",
+      "dlg-79e5212985bc",
+      "dlg-7a5deeebd8fd",
+      "dlg-7b091a879387",
+      "dlg-7b98fdb560cb",
+      "dlg-7cc4c2af211d",
+      "dlg-89ff275b74fa",
+      "dlg-8c09f7097772",
+      "dlg-8c2edf3bcdae",
+      "dlg-90bc37da5463",
+      "dlg-9209da0ac0cf",
+      "dlg-92a83c5246dc",
+      "dlg-93fa261b1dd9",
+      "dlg-9766927fd380",
+      "dlg-981ac60411e3",
+      "dlg-9a2f6da47093",
+      "dlg-9c80931aba66",
+      "dlg-9c97e33b11be",
+      "dlg-a25d3c867c91",
+      "dlg-a3160fb32675",
+      "dlg-a3dd16771853",
+      "dlg-a46c769327be",
+      "dlg-a627cf1b1e06",
+      "dlg-a7b9024bc54b",
+      "dlg-a7ddd2aa4390",
+      "dlg-a85247e817fb",
+      "dlg-af404b7e71f5",
+      "dlg-b4cb27b9f2db",
+      "dlg-b51f0ab3ad3f",
+      "dlg-b557a85dd38a",
+      "dlg-b5b1e778a9c2",
+      "dlg-b71afeebd5cd",
+      "dlg-b763e1483b5c",
+      "dlg-b8ad7ef34f41",
+      "dlg-be74f8d64e95",
+      "dlg-bfb0c9eee1c0",
+      "dlg-bfb4559a2329",
+      "dlg-cd6e795247c2",
+      "dlg-cf01bcd5f28c",
+      "dlg-d36f081e475b",
+      "dlg-da6acf1dcb03",
+      "dlg-dbefe4c928c2",
+      "dlg-dfb24e310788",
+      "dlg-e134ef44ebf8",
+      "dlg-e1e140ed8bb3",
+      "dlg-e1e32d79c2b0",
+      "dlg-e32a8ae37821",
+      "dlg-e42b1638d602",
+      "dlg-e5959090e4c7",
+      "dlg-e64133f671f8",
+      "dlg-e65d011e57de",
+      "dlg-ea5580741fda",
+      "dlg-ec618a43f218",
+      "dlg-ed261de88fb7",
+      "dlg-eedc4e6f5d7b",
+      "dlg-f341a1d94e5c",
+      "dlg-fabacf498fb9",
+      "dlg-fcba3895d23e",
+      "dlg-fcc077dd4fac",
+      "dlg-fe4aa060f20e",
+      "dlg-ff472de0801a",
+      "dlg-ff858194d99b",
+      "dlg-ff8cc45f85fb"
+    ],
+    "attempted": 600,
+    "succeeded": 600,
+    "parse_failures": 0,
+    "failures_by_kind": {},
+    "validation_retries": 0,
+    "usage": {
+      "requests": 600,
+      "retries": 0,
+      "failures": 0,
+      "prompt_tokens": 948254,
+      "completion_tokens": 105024,
+      "total_tokens": 1053278,
+      "requests_by_model": {
+        "anthropic/claude-sonnet-4.6": 300,
+        "openai/gpt-5.4": 300
+      }
+    },
+    "cost": {
+      "per_model": {
+        "anthropic/claude-sonnet-4.6": {
+          "requests": 300,
+          "prompt_tokens": 503882,
+          "completion_tokens": 58371,
+          "usd": 2.3872
+        },
+        "openai/gpt-5.4": {
+          "requests": 300,
+          "prompt_tokens": 444372,
+          "completion_tokens": 46653,
+          "usd": 1.8107
+        }
+      },
+      "total_usd": 4.1979,
+      "missing_pricing": []
+    }
+  }
+}

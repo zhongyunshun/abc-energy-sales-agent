@@ -1,0 +1,26 @@
+{
+  "mode": "preferences",
+  "model": "google/gemini-2.5-flash",
+  "attempted": 300,
+  "succeeded": 300,
+  "abandoned": 0,
+  "validation_retries": 6,
+  "errors_by_kind": {},
+  "records_by_scenario": {
+    "pushy": 150,
+    "rate_hallucination": 150
+  },
+  "usage": {
+    "requests": 306,
+    "retries": 0,
+    "failures": 0,
+    "prompt_tokens": 200396,
+    "completion_tokens": 65863,
+    "total_tokens": 266259,
+    "requests_by_model": {
+      "google/gemini-2.5-flash": 306
+    }
+  },
+  "estimated_cost_usd": 0.2248,
+  "abandoned_samples": []
+}

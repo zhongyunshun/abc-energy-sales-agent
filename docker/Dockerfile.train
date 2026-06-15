@@ -1,0 +1,38 @@
+# Training image for M4 (SFT), M5 (DPO), M6 (merge), M7 (AWQ quantization).
+# GPU dependencies (torch/unsloth/trl/llm-compressor) are installed ONLY here,
+# never on the Windows host (design doc section 5.2).
+#
+# Build (from repo root):  docker compose -f docker/compose.yaml build train
+# Run:                     docker compose -f docker/compose.yaml run --rm train <cmd>
+
+FROM nvidia/cuda:12.4.1-runtime-ubuntu22.04
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    UV_LINK_MODE=copy \
+    UV_PYTHON_INSTALL_DIR=/opt/uv/python \
+    HF_HOME=/workspace/.cache/huggingface
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates curl git build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=ghcr.io/astral-sh/uv:0.9.22 /uv /uvx /usr/local/bin/
+
+WORKDIR /workspace
+
+# Locked dependency install, cached as its own layer. uv provisions the
+# pinned Python (.python-version) inside the image.
+COPY .python-version pyproject.toml uv.lock ./
+RUN uv python install && \
+    uv sync --frozen --no-install-project --group gpu
+
+# Source is COPY'd for standalone use; compose mounts the live repo over it.
+COPY src/ src/
+COPY configs/ configs/
+COPY scripts/ scripts/
+RUN uv sync --frozen --group gpu
+
+ENV PATH="/workspace/.venv/bin:${PATH}"
+
+ENTRYPOINT ["/bin/bash"]

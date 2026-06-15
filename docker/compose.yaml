@@ -1,0 +1,66 @@
+# Service orchestration (design doc section 5.1).
+#
+#   train  — Unsloth/TRL/llm-compressor container for M4-M7 (profile: train)
+#   serve  — official vLLM OpenAI-compatible server for M8+
+#
+# GPU note: train and serve share the single RTX 4070 (12GB). Do NOT run them
+# at the same time; stages are executed serially (proposal section 7).
+#
+# Usage (from repo root):
+#   docker compose -f docker/compose.yaml build train
+#   docker compose -f docker/compose.yaml run --rm train <command>
+#   docker compose -f docker/compose.yaml up serve
+
+services:
+  train:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.train
+    image: sales-agent-train
+    profiles: [train]
+    gpus: all
+    stdin_open: true
+    tty: true
+    environment:
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - WANDB_API_KEY=${WANDB_API_KEY:-}
+    volumes:
+      - ../src:/workspace/src
+      - ../scripts:/workspace/scripts
+      - ../configs:/workspace/configs
+      - ../tests:/workspace/tests
+      - ../data:/workspace/data
+      - ../models:/workspace/models
+      - ../reports:/workspace/reports
+      - hf-cache:/workspace/.cache/huggingface
+
+  serve:
+    # Official image + engine flags MIRROR configs/serve.yaml (the single source of
+    # truth). These literals let `docker compose up serve` run standalone;
+    # tests/test_serve_config.py asserts they stay in sync with serve.yaml.
+    #
+    # M7 handoff: the AWQ product is compressed-tensors format -- vLLM auto-detects
+    # it from config.json (quant_method), so there is NO --quantization flag. Forcing
+    # `awq` (AutoAWQ) would misparse and fail to load.
+    #
+    # 4070/12GB: gpu-mem-util lowered 0.90 -> 0.55 (the card also drives the display,
+    # ~7.9GB free), max-model-len 4096 -> 3072, max-num-seqs 32 -> 16. --reasoning-parser
+    # qwen3 strips the empty <think></think> prefix into reasoning_content.
+    image: vllm/vllm-openai:v0.10.2
+    gpus: all
+    ports:
+      - "8000:8000"
+    ipc: host
+    volumes:
+      - ../models:/models
+    command: >
+      --model /models/quantized/awq
+      --served-model-name sales-agent-awq
+      --gpu-memory-utilization 0.55
+      --max-model-len 3072
+      --max-num-seqs 16
+      --enable-prefix-caching
+      --reasoning-parser qwen3
+
+volumes:
+  hf-cache:
