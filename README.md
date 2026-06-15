@@ -36,8 +36,10 @@ telesales / energy-sales assistant: data engineering → SFT → DPO → adapter
 | Advanced PTQ + smoke test                | Bonus 2 | [`Bonus/bonus2_quant/quantize_modelopt.py`](Bonus/bonus2_quant/quantize_modelopt.py) | **RTX 4070** (Docker / ModelOpt) |
 | Auto benchmarking + observability traces | Bonus 3 | [`Bonus/bonus3_observability/run_multiturn_trace_demo.py`](Bonus/bonus3_observability/run_multiturn_trace_demo.py) | **RTX 4070** endpoint + local/Langfuse |
 
-Module DAG and per-module design: `doc/detailed-design.md` §3. Requirements:
-`doc/proposal.md`. Progress / decision log: `doc/tasks/progress.md`.
+Bonus 1-3 run steps are documented in their folder READMEs:
+[`Bonus 1`](Bonus/bonus1_capacity/README.md),
+[`Bonus 2`](Bonus/bonus2_quant/README.md), and
+[`Bonus 3`](Bonus/bonus3_observability/README.md).
 
 ---
 
