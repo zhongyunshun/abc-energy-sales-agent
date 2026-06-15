@@ -1,4 +1,4 @@
-"""Local transformers inference fallback for offline eval (design doc 3-M9 step 2/4, T9.4).
+"""Local transformers inference fallback for offline eval (the M9 generation fallback, T9.4).
 
 The endpoint path (``generate.py``) is preferred; this is the no-server fallback so
 M9 can score a base model or an un-deployed adapter directly with transformers, and
@@ -104,7 +104,7 @@ def compute_ppl(
 ) -> list[float | None]:
     """Per-sample perplexity of the gold reply under the model (GPU host only).
 
-    Optional metric (design doc 3-M9 step 4): only the gold-reply tokens
+    Optional metric (the M9 metric step): only the gold-reply tokens
     contribute to the loss (the prompt is masked), so this measures how well the
     model predicts the reference continuation. Returns one PPL per sample.
     """

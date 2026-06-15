@@ -1,4 +1,4 @@
-# M3 split & leakage-prevention config (design doc section 3-M3, proposal 4-A3).
+# M3 split & leakage-prevention config (the M3 contract, the M3 split target).
 # CLI: uv run python scripts/data/split.py --config configs/split.yaml [--smoke]
 #
 # Runtime order (enforced by the CLI): merge M1+M2 -> global exact dedup ->

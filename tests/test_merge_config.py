@@ -29,14 +29,14 @@ def test_seed_default():
 
 def test_load_precision_is_bf16_not_4bit():
     # Merge in bf16 to match the adapter's training precision; 4-bit merging would
-    # lose precision (design doc section 3-M6). There is no load_in_4bit knob here.
+    # lose precision (the M6 contract). There is no load_in_4bit knob here.
     cfg = _cfg()
     assert cfg["model"]["dtype"] == "bfloat16"
     assert cfg["model"]["name"] == "unsloth/Qwen3-4B-Instruct-2507"
 
 
 def test_cpu_fallback_path_present():
-    # device_map must exist so a 12GB card can fall back to "cpu" (design doc 3-M6).
+    # device_map must exist so a 12GB card can fall back to "cpu" (the M6 contract).
     cfg = _cfg()
     assert "device_map" in cfg["model"]
     assert cfg["model"]["device_map"] in ("auto", "cpu", "cuda")

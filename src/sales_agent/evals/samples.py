@@ -1,4 +1,4 @@
-"""Eval-sample construction and reasoning-prefix stripping (design doc 3-M9, T9.1).
+"""Eval-sample construction and reasoning-prefix stripping (the M9 contract, T9.1).
 
 Pure logic only (no torch / transformers / network) so it unit-tests on the
 CPU-only Windows host. Two responsibilities:
@@ -7,7 +7,7 @@ CPU-only Windows host. Two responsibilities:
    :class:`EvalSample`: the context up to (but not including) the final assistant
    turn becomes the prompt; that final assistant turn becomes the ``gold``
    reference. Every other module reads/writes the shared ``DialogueRecord``
-   contract (design doc 2.1), but M9 only needs id / scenario / messages, so this
+   contract (the dialogue contract), but M9 only needs id / scenario / messages, so this
    accepts plain dicts (the thin CLI feeds it ``read_jsonl`` rows) and validates
    the minimum it relies on -- raising on malformed input rather than silently
    dropping records.
@@ -18,7 +18,7 @@ CPU-only Windows host. Two responsibilities:
    base-model inference path (T9.4) has no such parser, so the scoring pipeline
    strips again here. This keeps the over_length token count and role_break check
    from being polluted by an empty (or non-empty) think prefix -- pinned by unit
-   tests as required by the risk board (2026-06-14, Option A).
+   tests as required by the 2026-06-14 Option A decision.
 """
 
 from __future__ import annotations
@@ -92,7 +92,7 @@ def _to_sample(rec: dict) -> EvalSample:
 
 
 def build_eval_samples(records: Iterable[dict]) -> list[EvalSample]:
-    """Construct one :class:`EvalSample` per dialogue record (design doc 3-M9 step 1).
+    """Construct one :class:`EvalSample` per dialogue record (the M9 sample-construction step).
 
     Records are the JSONL rows of the test set (``DialogueRecord`` shape). Raises
     ``ValueError`` on the first malformed record -- the contract test set ends
@@ -113,8 +113,7 @@ def select_samples(samples: list[EvalSample], n: int | None, seed: int) -> list[
 
     The batch depends ONLY on (samples, n, seed) -- never on the model under test --
     so all three groups (base/sft/dpo) evaluated with the same config see exactly
-    the same ids, and M10 can re-draw the same ids from the results (design doc
-    3-M9 / 3-M10).
+    the same ids, and M10 can re-draw the same ids from the results (the M9/M10 sampling contract).
     """
     if n is None or n >= len(samples):
         return list(samples)

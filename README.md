@@ -36,6 +36,8 @@ telesales / energy-sales assistant: data engineering → SFT → DPO → adapter
 | Advanced PTQ + smoke test                | Bonus 2 | [`Bonus/bonus2_quant/quantize_modelopt.py`](Bonus/bonus2_quant/quantize_modelopt.py) | **RTX 4070** (Docker / ModelOpt) |
 | Auto benchmarking + observability traces | Bonus 3 | [`Bonus/bonus3_observability/run_multiturn_trace_demo.py`](Bonus/bonus3_observability/run_multiturn_trace_demo.py) | **RTX 4070** endpoint + local/Langfuse |
 
+The table above is the module DAG; the sections below cover requirements, execution details, disclosures, and acceptance evidence.
+
 Bonus 1-3 run steps are documented in their folder READMEs:
 [`Bonus 1`](Bonus/bonus1_capacity/README.md),
 [`Bonus 2`](Bonus/bonus2_quant/README.md), and
@@ -52,7 +54,7 @@ Bonus 1-3 run steps are documented in their folder READMEs:
 - **LoRA r32 / α64** (all 7 attention+MLP projection modules), chosen by an
   explicit hyperparameter sweep — r32/α64 @ lr2e-4 reached val loss **0.9496** vs
   **0.9720** for the r16/α32 baseline (`reports/training/sft_hparam_sweep.md`).
-  This is *not* the design's r16/α32 default.
+  This is *not* the original r16/α32 default.
 
 ### Alignment
 - **SFT then DPO.** SFT teaches the persona and short voice-style replies; DPO
@@ -66,7 +68,7 @@ Bonus 1-3 run steps are documented in their folder READMEs:
   a 12GB card (3.018× smaller, no visible quality regression — see §4).
 - The output is **compressed-tensors / pack-quantized** format, which vLLM
   auto-detects (no `--quantization` flag needed). GGUF Q4_K_M is noted as the
-  edge/CPU alternative (proposal C1) but not run here.
+  edge/CPU alternative but not run here.
 
 ### Serving — vLLM
 - Official `vllm/vllm-openai:v0.10.2` image (no self-built serving image),
@@ -77,7 +79,7 @@ Bonus 1-3 run steps are documented in their folder READMEs:
 
 ## 3. How to run (uv and Docker)
 
-Two execution surfaces, per `doc/detailed-design.md` §5.1/§5.2:
+Two execution surfaces are used:
 
 - **uv (host)** — CPU stages (M1, M3), API stages (M2, M10), serving control
   (M8 [`serve.sh`](scripts/serving/serve.sh)), and endpoint clients (M9, M11). The host installs only the
@@ -123,10 +125,9 @@ docker compose -f docker/compose.yaml build train       # CUDA 12.4 runtime + uv
 > **A100 (no-Docker) path.** M4/M5 were actually run on a shared A100 node without
 > docker-group permission, using an isolated uv venv instead of the container:
 > `uv venv && uv sync --group gpu` then the same `python scripts/...` commands.
-> This is a documented deviation from the "Docker for GPU" standard (risk board
-> 2026-06-13); the container path is the portable default.
+> This is a documented deviation from the "Docker for GPU" standard, recorded on 2026-06-13; the container path is the portable default.
 
-> **GPU sharing rule (proposal §7).** Training and serving share a single card and
+> **GPU sharing rule.** Training and serving share a single card and
 > must **never run at the same time** — stages are serial. [`serve.sh`](scripts/serving/serve.sh) warns if a
 > `sales-agent-train` container is up. Enforcement is operational, not automatic
 > (see §6).
@@ -344,7 +345,7 @@ the engine flags (kept in sync by `tests/test_serve_config.py`).
 ### 5.1 Measured tuning values (RTX 4070 12GB)
 | flag | value | why |
 |---|---|---|
-| `gpu_memory_utilization` | **0.55** | the card also drives the display (~4GB used, ~7.9GB free); the design default 0.90 OOMs |
+| `gpu_memory_utilization` | **0.55** | the card also drives the display (~4GB used, ~7.9GB free); the original default 0.90 OOMs |
 | `max_model_len` | **3072** | voice dialogues are short; small KV cache leaves headroom |
 | `max_num_seqs` | **16** | continuous-batching concurrency cap (matches the 16-way demo) |
 | `enable_prefix_caching` | **on** | reuse the shared system-prompt KV across requests |
@@ -367,7 +368,7 @@ re-run the fields return and the patch re-applies cleanly. (It edits
 
 ## 6. Resource isolation (shared GPU)
 
-Per proposal §4-C3 / §7 and `doc/detailed-design.md` §5.1:
+For shared-GPU operation:
 
 - **This project: time-slicing.** Training (M4/M5, A100) and serving (M8, 4070)
   never run concurrently; on the 4070 specifically, the quant/serve/eval/bench
@@ -382,8 +383,7 @@ Per proposal §4-C3 / §7 and `doc/detailed-design.md` §5.1:
 
 ## 7. Honest disclosures
 
-Every item below is backed by `doc/tasks/progress.md` (risk board) and the
-committed artifacts under `reports/` and `data/`.
+Every item below is backed by the committed artifacts under `reports/` and `data/`.
 
 ### Training
 - **SFT (M4) and DPO (M5) ran on an A100 40GB in bf16**, *not* the 4070 4-bit
@@ -434,9 +434,8 @@ committed artifacts under `reports/` and `data/`.
 ### Data
 - **Public dataset `goendalf666/sales-conversations` declares no license** on the
   HF hub (content is GPT-3.5-synthetic, no PII). Used as base training material for
-  this R&D challenge, documented here, in `data/README.md`, and in the risk board.
-- **Deviation from proposal §3** ("`data/` gitignored"): the small (~10 MB) `data/`
-  products **are committed** so remote runs reproduce without re-downloading.
+  this R&D challenge, documented here and in `data/README.md`.
+- **Data retention decision:** the small (~10 MB) `data/` products **are committed** so remote runs reproduce without re-downloading.
 - **M1 downsampling 2:1** (M1:M2) so 19,487 single-turn `general` records don't
   drown the M2 multi-turn energy dialogues (`data/processed/split_report.json`,
   `downsample.ratio = 2.0`).
@@ -448,7 +447,7 @@ committed artifacts under `reports/` and `data/`.
 
 ---
 
-## 8. Acceptance checklist (proposal §8)
+## 8. Acceptance checklist
 
 | # | Criterion | Status | Evidence |
 |---|---|---|---|
@@ -472,7 +471,7 @@ committed artifacts under `reports/` and `data/`.
 configs/      stage configs (single source of truth) + prompt templates
 data/         committed pipeline products (M1 normalized, M2 synthetic, M3 splits)
 docker/       Dockerfile.train (M4-M7) + compose.yaml (train / serve)
-doc/          proposal, detailed-design, task files, progress / risk board
+doc/          task files
 reports/      REPORT.md + training / serving / eval_offline / eval_judge / bench artifacts
 scripts/      thin CLIs per module (data / training / quant / serving / eval / bench)
 src/          sales_agent package: schema, io, openrouter, data, training, quant, evals, bench

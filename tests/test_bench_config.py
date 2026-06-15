@@ -1,4 +1,4 @@
-"""Guard tests for the M11 bench stage config (design doc 3-M11).
+"""Guard tests for the M11 bench stage config (the M11 contract).
 
 configs/bench.yaml is the single source of truth for the Locust benchmark; this
 pins the design-doc invariants (concurrency ladder, per-tier duration, warm-up

@@ -3,11 +3,11 @@
 > English snapshot of `doc/tasks/m00-foundation.md`. The Chinese file is the source of
 > truth; if the two diverge, the Chinese original wins. Translated for the public repo (M12 delivery).
 
-> Design refs: `detailed-design.md` §1, §2, §5 | Prerequisites: none (foundation for all modules)
+> Prerequisites: none (foundation for all modules)
 
 ## Tasks
 
-- [x] T0.1 Initialize the project structure: per design §1.3, create the directory skeleton `src/sales_agent/`, `scripts/`, `configs/`, `tests/`, `docker/`, `data/`, `models/`, `reports/` (incl. `__init__.py`; `.gitignore` ignores large files under data/models/reports)
+- [x] T0.1 Initialize the project structure: per the project layout convention, create the directory skeleton `src/sales_agent/`, `scripts/`, `configs/`, `tests/`, `docker/`, `data/`, `models/`, `reports/` (incl. `__init__.py`; `.gitignore` ignores large files under data/models/reports)
 - [x] T0.2 Configure `pyproject.toml`: uv dependency groups `dev` / `api` / `bench` (the `gpu` group is declared only, installed inside the container); `uv sync` passes; ruff + pytest base config
 - [x] T0.3 Implement `common/schema.py`: `DialogueRecord`, `PreferencePair` Pydantic models + `validate_dialogue()` semantic checks (role alternation, system first, n_turns consistency, lang)
 - [x] T0.4 Author `tests/fixtures/`: 5–10 samples per contract (valid + boundary-invalid: out-of-order roles, empty content, missing fields); all `tests/test_schema.py` assertions pass

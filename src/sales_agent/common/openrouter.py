@@ -1,4 +1,4 @@
-"""Unified OpenRouter access layer (design doc section 1.4).
+"""Unified OpenRouter access layer (the CLI contract).
 
 All strong-model API calls (M2 synthesis, M10 judge) go through
 :class:`OpenRouterClient`: the OpenAI SDK pointed at the OpenRouter base URL,

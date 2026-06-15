@@ -1,4 +1,4 @@
-"""Async batch generation against an OpenAI-compatible endpoint (design doc 3-M9 step 2).
+"""Async batch generation against an OpenAI-compatible endpoint (the M9 generation step).
 
 The orchestration takes an *injected* async client structurally compatible with
 ``openai.AsyncOpenAI`` (``client.chat.completions.create``), so unit tests drive it
@@ -6,7 +6,7 @@ with the programmable fake from ``tests/conftest.py`` -- zero real API calls -- 
 production passes a real ``AsyncOpenAI`` pointed at the vLLM endpoint. The thin CLI
 owns client construction and file I/O.
 
-Generation parameters are fixed for reproducibility (design doc 3-M9: temperature=0,
+Generation parameters are fixed for reproducibility (the M9 contract: temperature=0,
 fixed max_tokens). We read ``message.content`` ONLY -- never ``reasoning_content`` --
 because M8's qwen3 reasoning parser already moved the empty ``<think></think>`` out
 of content; the scoring pipeline still strips defensively (see

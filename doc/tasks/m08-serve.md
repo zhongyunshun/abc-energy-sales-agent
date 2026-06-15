@@ -3,7 +3,7 @@
 > English snapshot of `doc/tasks/m08-serve.md`. The Chinese file is the source of
 > truth; if the two diverge, the Chinese original wins. Translated for the public repo (M12 delivery).
 
-> Design refs: `detailed-design.md` §3-M8 | Prerequisites: M0, M7 AWQ product
+> Prerequisites: M0, M7 AWQ product
 
 ## Tasks
 

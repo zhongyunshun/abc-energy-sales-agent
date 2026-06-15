@@ -1,7 +1,7 @@
-"""Loss-curve export from a HuggingFace ``trainer_state.json`` (design doc M4/M5).
+"""Loss-curve export from a HuggingFace ``trainer_state.json`` (the M4/M5 contract).
 
 The PNG and the underlying ``trainer_state.json`` are core source material for
-the M12 README performance section (design doc section 5.3), so this must be
+the M12 README performance section (the M12 report contract), so this must be
 real, reproducible output. The data extraction is a pure function (unit-tested);
 ``matplotlib`` is imported lazily with the headless ``Agg`` backend so plotting
 works in the container with no display and so importing this module stays cheap.

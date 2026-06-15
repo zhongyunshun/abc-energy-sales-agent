@@ -15,7 +15,7 @@ quantize_awq.py): an idempotent config.json metadata patch for a downstream load
 serve.sh runs this before `docker compose up serve`. Idempotent: a second run finds
 nothing to strip and exits 0.
 
-Exit codes (design doc 1.4): 0 success (patched or already clean), 2 the model
+Exit codes (the CLI contract): 0 success (patched or already clean), 2 the model
 config.json is missing.
 """
 

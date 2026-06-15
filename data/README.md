@@ -61,7 +61,7 @@ alternating user/assistant turns ending with assistant. Every record in
 - **License**: the dataset declares **no license** on the Hugging Face hub.
   The content itself is GPT-3.5-generated synthetic text with no PII. We use
   it as base training material for this R&D challenge and document that
-  status here and in `doc/tasks/progress.md` (risk board).
+  status here.
 
 ### Synthetic data (M2, planned)
 

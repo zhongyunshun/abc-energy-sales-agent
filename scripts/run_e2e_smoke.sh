@@ -5,7 +5,7 @@
 # M1->M11 pipeline stays connected in a clean environment. This is a CONNECTIVITY
 # check, not a quality check: each stage runs with tiny inputs / few steps so the
 # whole chain finishes in minutes. It is the Day-3 "reproducibility" gate referenced
-# by detailed-design.md section 4.1 and backs the README "how to reproduce" section.
+# by the smoke workflow and backs the README "how to reproduce" section.
 #
 # What runs (decisions locked with the maintainer):
 #   M1 normalize   (host, CPU)        -> $SMOKE/interim/normalized.jsonl

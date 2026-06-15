@@ -1,4 +1,4 @@
-"""YAML config loading with repo-root-relative path resolution (design doc section 1.4).
+"""YAML config loading with repo-root-relative path resolution (the CLI contract).
 
 Conventions:
 - Every stage has one YAML file under ``configs/``.

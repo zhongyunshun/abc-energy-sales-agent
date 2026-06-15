@@ -1,11 +1,11 @@
-"""M11 re-aggregate + re-plot from existing raw CSVs (design doc 3-M11, task T11.3).
+"""M11 re-aggregate + re-plot from existing raw CSVs (the M11 contract, task T11.3).
 
 Thin shell over sales_agent.bench.report. Use it to regenerate bench_summary.csv
 and the three PNGs from raw_{c}.csv files that run_bench.py already produced --
 e.g. to tweak a plot without re-running the ~12-min GPU ladder. All logic is
 unit-tested in sales_agent.bench.report.
 
-Exit codes (design doc 1.4): 0 success; 2 no raw CSVs found.
+Exit codes (the CLI contract): 0 success; 2 no raw CSVs found.
 
 Usage:
   uv run python scripts/bench/plot_bench.py --config configs/bench.yaml

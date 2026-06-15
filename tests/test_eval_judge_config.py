@@ -1,9 +1,9 @@
-"""Guard test for configs/eval_judge.yaml (design doc 3-M10 invariants).
+"""Guard test for configs/eval_judge.yaml (the M10 contract invariants).
 
 The config is the single source of truth for the judge stage; this pins the
 invariants so no magic number drifts into code: seed=42, judge models are
 NON-Google (the whole point -- the synthesizer was google/gemini-2.5-flash, see
-risk board row 39), n=100 per group, 1-5 score range, parse retries <= 2, and the
+the judge-selection note), n=100 per group, 1-5 score range, parse retries <= 2, and the
 no-significant-difference threshold. Paths asserted OS-independently via
 Path(...).as_posix().endswith(...). Pure file parsing, no API.
 """
@@ -70,7 +70,7 @@ def test_score_range_and_threshold():
 
 
 def test_parse_retries_within_design_bound():
-    # Design doc 3-M10: re-ask a malformed judge response at most twice.
+    # the M10 contract: re-ask a malformed judge response at most twice.
     assert _raw()["max_retries"] <= 2
 
 

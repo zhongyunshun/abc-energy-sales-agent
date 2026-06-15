@@ -1,14 +1,12 @@
 """M7 AWQ calibration-set construction and FP16-vs-INT4 size accounting.
 
 Pure logic only: this module imports NO ``torch`` / ``transformers`` /
-``llmcompressor`` so its unit tests run on the CPU-only Windows host (design doc
-section 4.1). The GPU quantization (llm-compressor ``oneshot``) lives in
+``llmcompressor`` so its unit tests run on the CPU-only Windows host (the CPU-only testability contract). The GPU quantization (llm-compressor ``oneshot``) lives in
 ``scripts/quant/quantize_awq.py`` and runs inside the train container.
 
 What this builds
 ----------------
-AWQ needs a calibration set drawn from the *training domain* (proposal section
-4-C1). We sample dialogues from ``train.jsonl`` and render each to plain ChatML
+AWQ needs a calibration set drawn from the *training domain* (the M7 quantization target). We sample dialogues from ``train.jsonl`` and render each to plain ChatML
 text:
 
 - **Sampling** is stratified by ``(scenario, turn_bucket)`` -- the exact stratify

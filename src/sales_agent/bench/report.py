@@ -1,4 +1,4 @@
-"""M11 bench aggregation + plotting (design doc 3-M11, task T11.3).
+"""M11 bench aggregation + plotting (the M11 contract, task T11.3).
 
 Pure logic that turns the per-tier raw CSVs (one row per request, written by the
 locustfile) into the design-doc 2.4 ``bench_summary.csv`` and the three report

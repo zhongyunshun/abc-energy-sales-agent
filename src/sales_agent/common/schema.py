@@ -1,4 +1,4 @@
-"""Data contracts shared by all pipeline modules (design doc section 2).
+"""Data contracts shared by all pipeline modules (the data contract).
 
 Every module's input validation, output generation, and test fixtures use
 these Pydantic models. Files on disk are JSONL (UTF-8, one object per line).
@@ -21,7 +21,7 @@ class Message(BaseModel):
 
 
 class DialogueRecord(BaseModel):
-    """Multi-turn dialogue contract (design doc section 2.1).
+    """Multi-turn dialogue contract (the dialogue contract).
 
     Shared by M1 (normalize), M2 (synthesize), M3 (split), M9/M10 (eval).
     Structural checks live in the model; semantic checks (role sequence,
@@ -42,7 +42,7 @@ def validate_dialogue(record: DialogueRecord) -> list[str]:
     """Semantic validation for a structurally valid DialogueRecord.
 
     Returns a list of human-readable error strings; an empty list means the
-    record is valid. Rules (design doc section 2.1):
+    record is valid. Rules (the dialogue contract):
 
     1. Role sequence: at most one system message and only at position 0;
        the rest must be strictly alternating user/assistant starting with
@@ -94,7 +94,7 @@ def validate_dialogue(record: DialogueRecord) -> list[str]:
 
 
 class PreferencePair(BaseModel):
-    """DPO preference pair contract (design doc section 2.2).
+    """DPO preference pair contract (the preference-pair contract).
 
     Produced by M2 (synthesize), consumed by M5 (DPO training).
     ``context`` must be a valid prompt prefix ending with a user message.

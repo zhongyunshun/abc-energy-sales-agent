@@ -1,6 +1,6 @@
 """Unit tests for M4 chat-template rendering and completion-only masking.
 
-Pure logic, no GPU/tokenizer. Covers the correctness core (design doc section 6,
+Pure logic, no GPU/tokenizer. Covers the correctness core (the masking contract,
 open item 1): with/without system, single- and multi-turn, and exact assistant
 masking boundaries -- only assistant turns contribute to loss; system/user are
 masked.

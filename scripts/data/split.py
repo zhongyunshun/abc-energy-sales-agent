@@ -4,13 +4,13 @@ Usage:
     uv run python scripts/data/split.py --config configs/split.yaml \
         [--smoke] [--output-dir DIR]
 
-Runtime order (design doc section 3-M3, proposal 4-A3): merge M1+M2 -> global
+Runtime order (the M3 contract, the M3 split target): merge M1+M2 -> global
 exact dedup -> global MinHash near-dedup (BEFORE split) -> M1 downsample (T3.0)
 -> stratified split by complete dialogue -> cross-split leakage assertion.
 
 Writes ``{train,val,test}.jsonl`` + ``split_report.json`` (section 2.3 contract)
 + ``manifest.json`` into the output directory. Exit codes: 0 success, 2 input
-contract failure OR cross-split leakage detected (proposal acceptance #3).
+contract failure OR cross-split leakage detected (acceptance #3).
 """
 
 from __future__ import annotations
@@ -209,7 +209,7 @@ def main(argv: list[str] | None = None) -> int:
         "distribution_warnings": dist_warnings,
     }
 
-    # 7. Fail (exit 2) on cross-split leakage -- proposal acceptance #3.
+    # 7. Fail (exit 2) on cross-split leakage -- acceptance #3.
     if leak.cross_split_dups > 0:
         logger.error(
             "LEAKAGE: %d cross-split near-duplicate pairs (must be 0). Examples: %s",

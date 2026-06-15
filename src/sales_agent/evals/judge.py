@@ -1,18 +1,18 @@
-"""LLM-as-a-Judge scoring for the three model groups (design doc 3-M10).
+"""LLM-as-a-Judge scoring for the three model groups (the M10 contract).
 
 Pure logic + async orchestration over an injected :class:`OpenRouterClient`:
 sample selection (the SAME ids across all groups), Referee-prompt construction,
 robust judge-response parsing, and cross-tab aggregation. File I/O, env loading,
 and client construction live in the thin CLI (``scripts/eval/run_judge.py``).
 
-Module boundaries (design doc 1.1): M10 consumes M9's ``results.jsonl`` rows by
+Module boundaries (the module-boundary contract): M10 consumes M9's ``results.jsonl`` rows by
 their file contract only -- it reads each row's ``id`` / ``scenario`` /
 ``prompt_messages`` / ``completion`` (already reasoning-stripped by M8's parser +
 M9's :func:`samples.strip_reasoning`; M10 never re-reads the raw model output).
 Nothing here imports or mutates M9's rules/samples or ``openrouter.py``.
 
 Judge model: must be NON-Google. The synthesizer used ``google/gemini-2.5-flash``
-(risk board 2026-06-13 row 39) and the design's default judge ``gemini-2.5-pro`` is
+(the 2026-06-13 judge-selection note) and the original default judge ``gemini-2.5-pro`` is
 also Google -- same-source bias. ``configs/eval_judge.yaml`` therefore defaults
 ``judge_models`` to non-Google models (Anthropic + OpenAI), which are a different
 family from BOTH the synthesizer and the Qwen models under test (base/SFT/DPO), so
@@ -42,7 +42,7 @@ logger = logging.getLogger(__name__)
 # Bump when editing configs/prompts/judge.j2; recorded in the run manifest.
 JUDGE_TEMPLATE_VERSION = "v1"
 
-# Four scoring dimensions (design doc 3-M10 / contract 2.4). ``hallucination`` is
+# Four scoring dimensions (the M10 scoring contract). ``hallucination`` is
 # the "hallucination-free" axis: 5 = invents nothing, 1 = fabricates a price/fact.
 DEFAULT_DIMENSIONS: tuple[str, ...] = (
     "coherence",
@@ -72,7 +72,7 @@ _ROLE_LABELS = {"system": "System", "user": "Customer", "assistant": "Agent"}
 
 @dataclass
 class JudgeConfig:
-    """Parsed eval_judge.yaml (design doc 3-M10 config notes)."""
+    """Parsed eval_judge.yaml (the M10 contract config notes)."""
 
     seed: int
     judge_models: tuple[str, ...]  # NON-Google; >=1 (cross-validation)
@@ -132,7 +132,7 @@ class JudgeScore:
     judge_raw: str
 
     def to_row(self) -> dict:
-        """Serialize to the M10 scores.jsonl contract (design doc 2.4)."""
+        """Serialize to the M10 scores.jsonl contract (the result contract)."""
         return {
             "id": self.id,
             "model_tag": self.model_tag,
@@ -200,7 +200,7 @@ def select_judge_samples(
 
     M9 produces base/sft/dpo ``results.jsonl`` over the identical 650 ids; this draws
     one comparable sub-batch so the three groups are scored on exactly the same
-    dialogues (design doc 3-M10). Steps: take the common id universe (intersection
+    dialogues (the M10 contract). Steps: take the common id universe (intersection
     across tags), stratify-sample ``n`` from it using the FIRST tag's order as the
     canonical (id, scenario) source, then return each tag's matching rows in the
     same id order. The returned id set is therefore identical across all tags --
@@ -388,7 +388,7 @@ def _pairwise_overall(
     """Per-dimension pairwise overall-mean diffs, flagging gaps < threshold.
 
     "无明显差异" / no significant difference when |mean_a - mean_b| < threshold
-    (design doc 3-M10: 0.3). Pairs follow the tag order given (base, sft, dpo).
+    (the M10 contract: 0.3). Pairs follow the tag order given (base, sft, dpo).
     """
     notes: dict[str, list[dict]] = {}
     for dim in dimensions:
@@ -645,7 +645,7 @@ def render_comparison_md(
 ) -> str:
     """Render comparison.md: per-judge four-dimension base/sft/dpo tables + cost.
 
-    Core report material for M12 (design doc 5.3). Each judge gets an overall table
+    Core report material for M12 (the M12 report contract). Each judge gets an overall table
     (dim x model_tag, mean±std), a per-scenario breakdown, and the pairwise
     "no significant difference" notes (gap < threshold).
     """

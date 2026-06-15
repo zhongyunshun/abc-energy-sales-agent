@@ -1,11 +1,11 @@
 """M6 merge consistency comparator (T6.1) + fixed-prompt loading (T6.3 logic).
 
 Pure logic only: this module imports NO ``torch`` / ``transformers`` / ``peft`` so
-its unit tests run on a CPU-only host (design doc section 4.1). The GPU generation
+its unit tests run on a CPU-only host (the CPU-only testability contract). The GPU generation
 lives in ``scripts/training/merge_adapter.py``; everything testable without a GPU
 -- the prompt rendering and the before/after comparison -- lives here.
 
-What it checks (design doc section 3-M6)
+What it checks (the M6 contract)
 ----------------------------------------
 After ``peft merge_and_unload`` folds the DPO LoRA adapter into dense BF16 weights,
 the merged model must behave identically to ``base + adapter`` (PEFT inference).

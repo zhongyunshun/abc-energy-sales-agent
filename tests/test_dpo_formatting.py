@@ -3,7 +3,7 @@
 Pure logic, no GPU/tokenizer. Covers: the standard-format shape (prompt ends with
 the assistant generation prompt; chosen/rejected are the raw replies), optional
 default-system injection, the shared contract fixtures, and -- the boundary the
-design doc (section 3-M5) explicitly requires -- a ValueError when the context
+the M5 contract explicitly requires -- a ValueError when the context
 does not end with a user message (and when it is empty).
 """
 
@@ -130,7 +130,7 @@ def test_valid_fixtures_all_convert():
 #
 # PreferencePair's schema rejects a non-user-ending context at construction, so
 # we use model_construct to bypass validation and exercise the conversion's OWN
-# defensive guard (design doc section 3-M5).
+# defensive guard (the M5 contract).
 
 
 def test_context_not_ending_with_user_raises():

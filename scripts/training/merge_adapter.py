@@ -1,11 +1,11 @@
 """M6 thin CLI: merge the DPO LoRA adapter into dense BF16 weights + consistency check.
 
-Goal (proposal section 4-B3 / design doc section 3-M6): fold the M5 DPO adapter
+Goal (the M6 merge target / the M6 contract): fold the M5 DPO adapter
 into the base model so M7 (AWQ quant) and M8 (vLLM) can load a plain HF model
 directory, and prove the fold is behaviour-preserving with an 8-prompt greedy
 consistency check.
 
-Pipeline (design doc section 3-M6):
+Pipeline (the M6 contract):
   1. validate the adapter is in place (exit 2 if missing -- never merge nothing);
   2. BF16-load base + the DPO adapter via PEFT (4-bit merging would lose precision);
   3. greedy-generate the 8 fixed prompts on `base + adapter` (PEFT inference);

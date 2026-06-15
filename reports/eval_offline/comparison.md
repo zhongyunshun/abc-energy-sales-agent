@@ -4,7 +4,7 @@ Same engine (vLLM, compressed-tensors W4A16 AWQ on the RTX 4070), same generatio
 params (temperature=0, max_tokens=256), same 650-sample test batch (M3
 `data/processed/test.jsonl`). Length is a deterministic word/punct token count
 (`rules.count_tokens`); over_length budget = 120 tokens (voice replies must be
-short, proposal 4-D1). Numbers are real (not curated).
+short, the M9 offline-eval target). Numbers are real (not curated).
 
 - samples per group: 650
 - groups: **base** = `unsloth/Qwen3-4B-Instruct-2507` (untuned instruct),

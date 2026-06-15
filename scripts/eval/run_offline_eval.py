@@ -8,12 +8,12 @@ Usage (local fallback, no server -- base or un-deployed adapter):
     uv run python scripts/eval/run_offline_eval.py --config configs/eval_offline.yaml \
         --model-tag base --local-model <hf-path-or-id> [--local-adapter <peft-dir>]
 
-Flow (design doc 3-M9): build_eval_samples(test.jsonl) -> select_samples(seeded) ->
+Flow (the M9 contract): build_eval_samples(test.jsonl) -> select_samples(seeded) ->
 generate (endpoint async OR local transformers) -> strip_reasoning -> apply_rules ->
 write reports/eval_offline/<model_tag>/{results.jsonl, summary.json, manifest.json}.
 
 All three groups run with the SAME config so they see the identical sample batch and
-generation params (DoD: same caliber). Exit codes (design doc 1.4): 0 success, 2 input
+generation params (DoD: same caliber). Exit codes (the CLI contract): 0 success, 2 input
 contract failure (no test set / malformed records / no samples), 3 external dependency
 failure (endpoint unreachable / local stack missing).
 """
@@ -42,7 +42,7 @@ EXIT_DEPENDENCY = 3
 
 
 def _build_rows(samples, outputs, rule_cfg, gen_cfg, model_tag):
-    """Strip -> score every (sample, output) into M9 result rows (contract 2.4)."""
+    """Strip -> score every (sample, output) into M9 result rows (the result contract)."""
     gen_record = {**gen_cfg.as_record(), "model_tag": model_tag}
     rows: list[dict] = []
     for sample, out in zip(samples, outputs, strict=True):

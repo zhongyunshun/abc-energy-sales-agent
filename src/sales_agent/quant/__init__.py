@@ -2,5 +2,5 @@
 
 The GPU quantization itself (llm-compressor ``oneshot``) lives in the thin CLI
 ``scripts/quant/quantize_awq.py`` and runs inside the train container; this
-package holds only the pure, unit-testable logic (design doc section 3-M7).
+package holds only the pure, unit-testable logic (the M7 contract).
 """

@@ -3,7 +3,7 @@
 > English snapshot of `doc/tasks/m07-quant.md`. The Chinese file is the source of
 > truth; if the two diverge, the Chinese original wins. Translated for the public repo (M12 delivery).
 
-> Design refs: `detailed-design.md` §3-M7 | Prerequisites: M0, M6 merged model
+> Prerequisites: M0, M6 merged model
 
 ## Tasks
 

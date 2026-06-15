@@ -1,4 +1,4 @@
-"""Normalize raw Alpaca/ShareGPT sales dialogues into DialogueRecord (design doc section 3-M1).
+"""Normalize raw Alpaca/ShareGPT sales dialogues into DialogueRecord (the M1 contract).
 
 Pure logic only: format conversion, the fixed-order cleaning chain, scenario
 tagging, and pipeline orchestration over already-loaded raw records. File and
@@ -160,7 +160,7 @@ def prefixed_pair_to_dialogue(raw: dict, source: str) -> DialogueRecord | None:
 
 
 # ---------------------------------------------------------------------------
-# Cleaning chain (design doc section 3-M1, step 3 — order is fixed)
+# Cleaning chain (the M1 contract, step 3 — order is fixed)
 # ---------------------------------------------------------------------------
 
 DROP_EMPTY = "empty_after_filter"
@@ -218,7 +218,7 @@ def _detect_lang(messages: list[Message]) -> str:
 def clean_dialogue(rec: DialogueRecord, rules: CleanConfig) -> CleanResult:
     """Apply the fixed-order cleaning chain to one converted record.
 
-    Order (design doc section 3-M1): (1) drop empty/too-short turns,
+    Order (the M1 contract): (1) drop empty/too-short turns,
     (2) drop non-English dialogues, (3) replace PII with placeholders,
     (4) truncate trailing non-assistant turns. Exact dedup runs afterwards
     at pipeline level. The surviving record gets a recomputed id and
@@ -307,7 +307,7 @@ def run_pipeline(
     rules: CleanConfig,
     keyword_map: dict[str, list[str]],
 ) -> tuple[list[DialogueRecord], dict]:
-    """Convert, clean, dedup, tag, and validate all sources (design doc section 3-M1).
+    """Convert, clean, dedup, tag, and validate all sources (the M1 contract).
 
     Per-record steps follow the fixed design order: format conversion ->
     cleaning chain -> exact dedup (global, first occurrence wins) ->

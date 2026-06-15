@@ -1,4 +1,4 @@
-# M5 DPO config (design doc section 3-M5, proposal section 4-B2).
+# M5 DPO config (the M5 contract, the M5 DPO target).
 #
 # Continue-training the M4 SFT adapter with TRL DPOTrainer on the 300 synthetic
 # preference pairs (pushy 150 / rate_hallucination 150) to suppress pushy closes
@@ -38,7 +38,7 @@ ref:
   policy_adapter_name: default     # trainable; "default" -> saves to output_dir root
   ref_adapter_name: reference      # frozen copy of the SFT adapter
 
-# DPO hyperparameters (design doc section 3-M5: beta 0.1, lr 5e-6, 1 epoch,
+# DPO hyperparameters (the M5 contract: beta 0.1, lr 5e-6, 1 epoch,
 # batch as SFT). Effective batch = 4 x 4 = 16 (same as SFT); over 300 pairs that
 # is ~19 optimiser steps, so logging_steps=1 to give the margins curve real points.
 dpo:

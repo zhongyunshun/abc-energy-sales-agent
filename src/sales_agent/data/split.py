@@ -1,6 +1,6 @@
 """M3 split & leakage prevention: global near-dedup, M1 downsampling,
 stratified train/val/test split, and a cross-split leakage assertion
-(design doc section 3-M3, proposal section 4-A3 and section 8 acceptance #3).
+(the M3 split and leakage contract).
 
 Pure-CPU logic, no GPU and no API. Everything here is unit-testable; the thin
 CLI in ``scripts/data/split.py`` wires these functions in the mandated runtime
@@ -27,7 +27,7 @@ from sales_agent.common.schema import DialogueRecord
 from sales_agent.data.dedup import normalize_text
 
 # ---------------------------------------------------------------------------
-# Turn bucketing & stratify key (design doc section 3-M3)
+# Turn bucketing & stratify key (the M3 contract)
 # ---------------------------------------------------------------------------
 
 TURN_BUCKETS = ("short", "mid", "long")  # ordered short < mid < long
@@ -121,7 +121,7 @@ def minhash_dedup(
     -> verify candidate pairs by estimated Jaccard -> union-find clusters ->
     keep one record per cluster.
 
-    Cluster keep-priority (design doc): prefer real over synthetic, then the
+    Cluster keep-priority (the keep-priority rule): prefer real over synthetic, then the
     longer dialogue, then the earliest input index (deterministic tie-break).
     Survivors are returned in original input order, so a second pass drops
     nothing (idempotent).
@@ -323,7 +323,7 @@ def _merge_small_strata(
 ) -> tuple[dict[str, list[DialogueRecord]], SplitMeta]:
     """Merge strata smaller than ``min_stratum`` to avoid empty/degenerate layers.
 
-    Two phases (design doc: "small layers merge into a neighboring bucket"):
+    Two phases (the small-layer merge rule: "small layers merge into a neighboring bucket"):
       1. Within each scenario, merge adjacent turn buckets (short<mid<long)
          left-to-right until each chunk reaches ``min_stratum``; a small tail
          folds back into the previous chunk.
@@ -429,7 +429,7 @@ def stratified_split(
 
 
 # ---------------------------------------------------------------------------
-# T3.3 -- cross-split leakage assertion (proposal section 8, acceptance #3)
+# T3.3 -- cross-split leakage assertion (acceptance #3)
 # ---------------------------------------------------------------------------
 
 
@@ -509,7 +509,7 @@ def assert_no_leakage(
 
 
 # ---------------------------------------------------------------------------
-# Distribution consistency (design doc section 3-M3 step 6: >3pp -> WARN)
+# Distribution consistency (the M3 distribution check: >3pp -> WARN)
 # ---------------------------------------------------------------------------
 
 

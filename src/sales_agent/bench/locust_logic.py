@@ -1,4 +1,4 @@
-"""Pure logic behind the M11 Locust file (design doc 3-M11, task T11.1).
+"""Pure logic behind the M11 Locust file (the M11 contract, task T11.1).
 
 The locustfile itself (scripts/bench/locustfile.py) is a thin shell that drives
 real HTTP streaming and writes a raw CSV row per request; it is NOT unit-tested

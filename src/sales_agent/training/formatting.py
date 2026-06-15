@@ -1,13 +1,12 @@
 """Chat-template rendering and completion-only masking boundaries for SFT/DPO.
 
 Pure logic only: this module deliberately imports NO ``torch`` / ``transformers``
-/ ``trl`` so its unit tests run on a CPU-only host (design doc section 4.1).
+/ ``trl`` so its unit tests run on a CPU-only host (the CPU-only testability contract).
 
 Why this exists
 ---------------
 M4 trains Qwen3-4B-Instruct with Unsloth QLoRA and **completion-only masking**
-(loss on assistant turns only). The masking is the correctness core (design doc
-section 6, open item 1). The locked stack is TRL 0.23.0 / Unsloth 2025.11.1, and
+(loss on assistant turns only). The masking is the correctness core (the masking contract, open item 1). The locked stack is TRL 0.23.0 / Unsloth 2025.11.1, and
 the chosen path is Unsloth ``train_on_responses_only`` driven by the Qwen ChatML
 marker strings :data:`INSTRUCTION_PART` / :data:`RESPONSE_PART` (see report). That
 path is token-based at train time, but its *boundary semantics* are reproduced
@@ -140,7 +139,7 @@ def preference_pair_to_dpo(pair: PreferencePair, default_system: str | None = No
       unit-tested template. Concatenated with a completion it yields
       ``...<|im_start|>assistant\\n{reply}`` -- the point the model continues from.
     - ``chosen`` / ``rejected`` are the raw assistant reply strings (no markers),
-      per the M5 contract (design doc section 3-M5).
+      per the M5 contract.
 
     When ``default_system`` is set and the context has no system message, it is
     injected at position 0 (mirrors :func:`to_conversation`, keeping the DPO prompt
@@ -150,7 +149,7 @@ def preference_pair_to_dpo(pair: PreferencePair, default_system: str | None = No
     message. The :class:`PreferencePair` schema already enforces this at
     construction, but the conversion layer re-checks defensively so a hand-built
     or ``model_construct``-bypassed pair can never silently emit a malformed prompt
-    (design doc section 3-M5 explicitly requires this guard).
+    (the M5 contract explicitly requires this guard).
     """
     context = pair.context
     if not context:

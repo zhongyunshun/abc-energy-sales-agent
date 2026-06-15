@@ -1,4 +1,4 @@
-"""Shared pytest fixtures (design doc section 4.2).
+"""Shared pytest fixtures (the shared-fixture contract).
 
 - ``fake_openrouter``: programmable OpenRouter fake. Downstream module tests
   (M2 synthesis, M10 judge) script it with good outputs, malformed outputs,

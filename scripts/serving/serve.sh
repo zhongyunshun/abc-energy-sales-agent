@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# M8 serve launcher (design doc 3-M8 / task T8.2).
+# M8 serve launcher (the M8 contract / task T8.2).
 #
 # Wraps `docker compose up serve` with a pre-flight check and a /health poll.
 # Reads ALL runtime values from configs/serve.yaml (the single source of truth)
 # via load_config, so this script carries no magic numbers. Runs on the Windows
 # host under Git Bash or WSL.
 #
-# Exit codes (design doc 1.4):
+# Exit codes (the CLI contract):
 #   0  service healthy
 #   2  input-contract failure (AWQ model dir missing)
 #   3  external-dependency failure (Docker unavailable, or /health not ready
@@ -64,7 +64,7 @@ fi
 # GPU is serial on the single 4070: warn (don't fail) if the train container is up.
 if docker ps --format '{{.Image}}' | grep -q '^sales-agent-train'; then
   echo "WARNING: a 'sales-agent-train' container is running -- it shares the 4070." >&2
-  echo "         Stop it before serving to avoid GPU contention (proposal section 7)." >&2
+  echo "         Stop it before serving to avoid GPU contention (the shared-GPU rule)." >&2
 fi
 
 # --- serve-compat shim: strip quant-config keys the pinned vLLM rejects ---

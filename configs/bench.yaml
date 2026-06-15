@@ -1,8 +1,8 @@
-# M11 load-test config (design doc 3-M11, proposal Bonus 3a).
+# M11 load-test config (the M11 contract, the bonus 3a target).
 #
 # SINGLE SOURCE OF TRUTH for the Locust benchmark: concurrency ladder, per-tier
 # duration, warm-up discard, endpoint, generation params, prompt pool. No magic
-# numbers in code (design doc 1.3). tests/test_bench_config.py guards the
+# numbers in code (the config contract). tests/test_bench_config.py guards the
 # invariants (tiers, durations, warmup, endpoint, seed=42; paths asserted
 # OS-independently via Path(...).as_posix().endswith).
 #
@@ -55,7 +55,7 @@ generation:
   max_tokens: 256
 
 # Smoke mode (--smoke): one short tier to validate the pipeline against the live
-# endpoint before the ~12-min full ladder (design doc 3-M11 test note).
+# endpoint before the ~12-min full ladder (the M11 smoke-test note).
 smoke:
   concurrency: [16]
   run_time_s: 30

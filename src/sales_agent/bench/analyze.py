@@ -1,4 +1,4 @@
-"""Streaming-timing aggregation (design doc 3-M8 / 3-M11, task T8.3).
+"""Streaming-timing aggregation (the M8/M11 contract, task T8.3).
 
 Pure functions that turn a stream of per-chunk arrival timestamps into latency
 metrics. This is the M8 concurrency demo's measurement core AND the M11 (Locust)

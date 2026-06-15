@@ -3,7 +3,7 @@
 > English snapshot of `doc/tasks/m10-eval-judge.md`. The Chinese file is the source of
 > truth; if the two diverge, the Chinese original wins. Translated for the public repo (M12 delivery).
 
-> Design refs: `detailed-design.md` §3-M10 | Prerequisites: M0, M9 three-group results (or fixtures)
+> Prerequisites: M0, M9 three-group results (or fixtures)
 
 ## Tasks
 

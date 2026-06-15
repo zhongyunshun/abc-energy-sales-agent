@@ -4,12 +4,12 @@ Usage (smoke first, then full -- after M9 produced the three results.jsonl):
     uv run python scripts/eval/run_judge.py --config configs/eval_judge.yaml --smoke
     uv run python scripts/eval/run_judge.py --config configs/eval_judge.yaml
 
-Flow (design doc 3-M10): load base/sft/dpo results.jsonl -> select_judge_samples
+Flow (the M10 contract): load base/sft/dpo results.jsonl -> select_judge_samples
 (SAME ids across groups, seeded, scenario-stratified) -> run_judge (each non-Google
 judge model scores every sample BLIND, via OpenRouter) -> aggregate_scores ->
 write reports/eval_judge/{scores.jsonl, comparison.md, manifest.json}.
 
-Exit codes (design doc 1.4): 0 success; 2 input contract failure (missing/empty/
+Exit codes (the CLI contract): 0 success; 2 input contract failure (missing/empty/
 malformed results.jsonl, no common ids); 3 external dependency failure (no API key,
 or every judge call failed).
 """

@@ -1,4 +1,4 @@
-# M1 data normalization config (design doc section 3-M1).
+# M1 data normalization config (the M1 contract).
 # CLI: uv run python scripts/data/normalize.py --config configs/normalize.yaml [--smoke]
 
 seed: 42
@@ -15,7 +15,7 @@ smoke_limit: 50
 # goendalf666/sales-conversations is NOT ShareGPT: rows are string columns
 # "0".."19" of "Customer:"/"Salesman:" prefixed text bundling independent
 # exchanges, so it is split into single-turn dialogues (format
-# prefixed_pairs). Decision log: doc/tasks/progress.md risk board.
+# prefixed_pairs). Decision: split prefixed rows into single-turn dialogues.
 sources:
   - source_tag: "hf:goendalf666/sales-conversations"
     hf_dataset: "goendalf666/sales-conversations"
@@ -26,7 +26,7 @@ clean:
   # Turns whose stripped content is shorter than this are removed.
   min_content_chars: 2
 
-# Keyword rules for initial scenario tagging (design doc section 2.1).
+# Keyword rules for initial scenario tagging (the dialogue contract).
 # First matching scenario in this order wins ties; no hit means "general".
 scenario_keywords:
   objection_handling:

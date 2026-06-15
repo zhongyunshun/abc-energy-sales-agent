@@ -1,4 +1,4 @@
-"""Summary aggregation for offline eval (design doc 3-M9 step 5, contract 2.4).
+"""Summary aggregation for offline eval (the M9 summary step, the result contract).
 
 Pure logic: roll a list of per-sample result rows into ``summary.json`` -- each
 rule's trigger rate and the reply-length distribution, both overall and grouped by
@@ -45,7 +45,7 @@ def _group_summary(rows: list[dict]) -> dict:
 
 
 def summarize_results(results: list[dict], *, model_tag: str, gen_config: dict) -> dict:
-    """Aggregate result rows into the M9 ``summary.json`` (design doc 2.4).
+    """Aggregate result rows into the M9 ``summary.json`` (the result contract).
 
     Each row needs ``scenario``, ``rule_flags`` (the four booleans), and
     ``n_tokens``. Output: overall rollup + a per-scenario breakdown (sorted), each

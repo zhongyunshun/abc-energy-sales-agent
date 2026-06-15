@@ -1,6 +1,6 @@
 """M5 thin CLI: TRL DPO alignment on top of the M4 SFT adapter.
 
-Goal (proposal section 4-B2 / design doc section 3-M5): continue-train the SFT
+Goal (the M5 DPO target / the M5 contract): continue-train the SFT
 adapter on synthetic preference pairs to suppress pushy closes and rate
 hallucination.
 
@@ -10,7 +10,7 @@ copy (named "default" so it saves to output_dir root) and a frozen `reference`
 copy. TRL's DPOTrainer swaps to `ref_adapter_name` for reference logps, so KL is
 anchored to SFT with no extra full model in memory.
 
-Pipeline (design doc section 3-M5):
+Pipeline (the M5 contract):
   1. load + validate preference pairs (M2 product) and behaviour probes;
   2. bf16 base + two SFT-initialised adapters (policy trainable, reference frozen);
   3. PreferencePair -> DPO standard rows via formatting.preference_pair_to_dpo;

@@ -1,10 +1,10 @@
-# M2 data synthesis config (design doc section 3-M2).
+# M2 data synthesis config (the M2 contract).
 # CLI: uv run python scripts/data/synthesize.py --config configs/synthesize.yaml \
 #        --mode dialogues|preferences [--smoke] [--output-dir DIR]
 
 seed: 42
 
-# Bulk model via OpenRouter (design doc section 1.4). Two-stage strategy: a
+# Bulk model via OpenRouter (the CLI contract). Two-stage strategy: a
 # small, diverse seed pool is bootstrapped with a stronger model (e.g.
 # google/gemini-3.5-flash via `--model`), then the bulk is generated cheaply
 # here with each prompt anchored on 1-2 random seeds. Swap freely -- the model
@@ -18,7 +18,7 @@ client_max_retries: 3     # transient API retries inside OpenRouterClient
 max_retries: 2            # validation-failure regenerations per task (design: <= 2)
 use_json_mode: false      # rely on robust JSON extraction; flip on if the model supports it
 
-# Generation-side quality gate thresholds (design doc section 3-M2 step 3/4).
+# Generation-side quality gate thresholds (the M2 quality gate).
 min_turns: 3              # dialogue assistant-turn lower bound
 min_edit_distance: 0.3    # chosen/rejected normalized-Levenshtein lower bound
 
@@ -49,7 +49,7 @@ pricing:
 # Quotas sum to 3200, targeting ~3000 valid after gate attrition. Scaled up so
 # on-domain multi-turn synthetic data dominates the SFT mix rather than being
 # swamped by M1's generic, single-turn corpus (M1 is ~97% non-energy, ~94%
-# "general"). objection_handling and info_gathering dominate per proposal
+# "general"). objection_handling and info_gathering dominate by design
 # section 4-A2; synthetic data carries accurate scenario labels.
 dialogues:
   output_path: data/interim/synthetic_dialogues.jsonl

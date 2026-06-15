@@ -1,8 +1,8 @@
-# M7 AWQ INT4 (W4A16) post-training quantization (design doc section 3-M7,
-# proposal section 4-C1). llm-compressor `oneshot` with an AWQ recipe; the
+# M7 AWQ INT4 (W4A16) post-training quantization (the M7 contract,
+# the M7 quantization target). llm-compressor `oneshot` with an AWQ recipe; the
 # calibration set is sampled from the training domain (train.jsonl).
 #
-# Run inside the train container (GPU deps are container-only, design doc 5.2):
+# Run inside the train container (GPU deps are container-only, the container-only GPU convention):
 #   docker compose -f docker/compose.yaml run --rm --entrypoint uv train \
 #     run python scripts/quant/quantize_awq.py --config configs/quant.yaml --smoke
 #
@@ -17,7 +17,7 @@ seed: 42
 
 model:
   # Merged dense BF16 model from M6. On this PC the M6 product lives under
-  # models/adapters/merged/ (the contract path in design doc 2.5 is models/merged/;
+  # models/adapters/merged/ (the contract path in the model path contract is models/merged/;
   # pointed at the real location by user decision). Overridable with --merged-dir.
   merged_dir: models/adapters/merged
   dtype: bfloat16

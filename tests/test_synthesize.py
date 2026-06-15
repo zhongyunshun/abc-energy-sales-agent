@@ -1,4 +1,4 @@
-"""Unit tests for M2 synthesis logic (design doc section 3-M2, section 4).
+"""Unit tests for M2 synthesis logic (the M2 contract and CLI behavior).
 
 All pure logic + the async orchestration against the programmable
 ``fake_openrouter`` -- zero real API calls.

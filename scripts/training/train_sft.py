@@ -1,10 +1,10 @@
 """M4 thin CLI: Unsloth QLoRA SFT of Qwen3-4B-Instruct with completion-only loss.
 
-Usage (GPU train container ONLY -- design doc section 5.1/5.2):
+Usage (GPU train container ONLY -- the GPU-container convention):
     docker compose -f docker/compose.yaml run --rm train \
         uv run python scripts/training/train_sft.py --config configs/sft.yaml [--smoke]
 
-Pipeline (design doc section 3-M4):
+Pipeline (the M4 contract):
   1. load + validate train/val DialogueRecords (M3 products);
   2. render each via the tokenizer's Qwen chat template (real template; the
      marker-based masking logic is unit-tested against formatting.render_chatml);

@@ -1,10 +1,10 @@
-# M4 SFT config (design doc section 3-M4, proposal section 4-B1).
+# M4 SFT config (the M4 contract, the M4 SFT target).
 # CLI: docker compose -f docker/compose.yaml run --rm train \
 #        uv run python scripts/training/train_sft.py --config configs/sft.yaml [--smoke]
 #
 # Runs ONLY inside the GPU train container (Unsloth/TRL/torch are container-only;
-# design doc section 5.2). All hyperparameters live here -- no magic numbers in
-# code. The baseline table (design doc section 3-M4) is reproduced 1:1 below.
+# the container-only GPU convention). All hyperparameters live here -- no magic numbers in
+# code. The baseline table (the M4 contract) is reproduced 1:1 below.
 
 seed: 42
 
@@ -37,7 +37,7 @@ lora:
   use_rslora: false
   random_state: 42
 
-# Completion-only masking (design doc section 6, open item 1). Locked path:
+# Completion-only masking (the masking contract, open item 1). Locked path:
 # Unsloth `train_on_responses_only` driven by the Qwen ChatML marker strings.
 # These MUST match src/sales_agent/training/formatting.py constants.
 masking:
@@ -73,7 +73,7 @@ data:
 
 # Experiment logging. W&B when WANDB_API_KEY is present (passed via compose env),
 # auto-downgraded to local TensorBoard otherwise -- loss is ALWAYS recorded
-# (design doc M4, proposal 4-B1). Never silently skip loss logging.
+# (the M4 contract, the M4 SFT target). Never silently skip loss logging.
 logging:
   report_to_wandb: true
   wandb_project: sales-agent-sft

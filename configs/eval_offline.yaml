@@ -1,12 +1,12 @@
-# M9 offline-eval config (design doc 3-M9, proposal 4-D1).
+# M9 offline-eval config (the M9 contract, the M9 offline-eval target).
 #
 # SINGLE SOURCE OF TRUTH for the offline-eval stage: generation params, the
 # over_length budget, sampling, and the endpoint default. No magic numbers in code
-# (design doc 1.3). tests/test_eval_offline_config.py guards the invariants
+# (the config contract). tests/test_eval_offline_config.py guards the invariants
 # (temperature=0, fixed max_tokens, over_length threshold, seed=42).
 #
 # Run (after `bash scripts/serving/serve.sh`), once per model group with the SAME
-# config so all three see the identical sample batch (design doc 3-M9 DoD):
+# config so all three see the identical sample batch (the M9 sampling rule):
 #   uv run python scripts/eval/run_offline_eval.py --config configs/eval_offline.yaml \
 #       --model-tag dpo --endpoint http://127.0.0.1:8000/v1
 #   # ... re-serve base / sft AWQ, then --model-tag base / sft against the endpoint.
@@ -19,7 +19,7 @@ test_path: data/processed/test.jsonl
 output_dir: reports/eval_offline
 
 generation:
-  # Fixed for reproducibility (design doc 3-M9 step 2). temperature=0 -> greedy.
+  # Fixed for reproducibility (the M9 generation step). temperature=0 -> greedy.
   temperature: 0.0
   # Voice replies are short; 256 is a generous cap that still bounds cost.
   max_tokens: 256
@@ -33,7 +33,7 @@ sampling:
   n_samples: null
 
 rules:
-  # Reply token budget (design doc 3-M9 step 3; proposal 4-D1: speech wants short
+  # Reply token budget (the M9 rule step; the M9 offline-eval target: speech wants short
   # replies). Tokens are a deterministic word/punct count (rules.count_tokens), so
   # the metric is identical across the three groups and needs no tokenizer.
   over_length_max_tokens: 120
@@ -47,7 +47,7 @@ rules:
   role_break_patterns: []
 
 # Smoke mode (--smoke): tiny run to validate the pipeline against the live endpoint
-# before the full sweep (design doc 3-M9 test note: smoke 10 rows first).
+# before the full sweep (the M9 smoke-test note: smoke 10 rows first).
 smoke:
   n_samples: 10
 

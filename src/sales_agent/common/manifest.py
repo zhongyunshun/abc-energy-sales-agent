@@ -1,4 +1,4 @@
-"""Stage output manifests for reproducibility (design doc section 1.1, principle 5).
+"""Stage output manifests for reproducibility (the module-boundary contract, principle 5).
 
 Every stage writes a ``manifest.json`` into its output directory containing:
 input file hashes, a config snapshot, the current git commit, a UTC timestamp,

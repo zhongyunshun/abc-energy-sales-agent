@@ -1,4 +1,4 @@
-"""M11 bench orchestrator (design doc 3-M11, task T11.2 + drives T11.3).
+"""M11 bench orchestrator (the M11 contract, task T11.2 + drives T11.3).
 
 Runs the concurrency ladder against the live vLLM endpoint, one tier at a time, by
 launching the locustfile headless in a SUBPROCESS per tier. Using a subprocess
@@ -11,7 +11,7 @@ This is a thin shell: all timing/aggregation/plotting logic is unit-tested in
 sales_agent.bench.{locust_logic,report}. This script only orchestrates and is
 validated against the real server (smoke then full ladder).
 
-Exit codes (design doc 1.4):
+Exit codes (the CLI contract):
   0  success
   2  input-contract failure (test set missing / no prompts)
   3  external-dependency failure (endpoint unreachable / a locust tier failed to run)

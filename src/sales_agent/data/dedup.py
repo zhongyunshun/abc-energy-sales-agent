@@ -28,7 +28,7 @@ def content_hash(messages: list[Message]) -> str:
 
 
 def dialogue_id(messages: list[Message]) -> str:
-    """Stable content-derived record id (design doc section 2.1)."""
+    """Stable content-derived record id (the dialogue contract)."""
     return f"dlg-{content_hash(messages)[:12]}"
 
 

@@ -1,6 +1,6 @@
 """M7 thin CLI: AWQ INT4 (W4A16) PTQ of the merged model via llm-compressor.
 
-Goal (design doc section 3-M7 / proposal section 4-C1): quantize the M6 merged
+Goal (the M7 contract / the M7 quantization target): quantize the M6 merged
 BF16 model to W4A16 (asymmetric, group_size 128) with an activation-aware AWQ
 recipe, calibrated on text sampled from the training domain, producing a
 ``models/quantized/awq/`` directory that transformers (and M8/vLLM) can load.
@@ -20,7 +20,7 @@ Pipeline:
 
 Heavy GPU deps (torch/transformers/llmcompressor/datasets) are imported lazily
 inside main() so this file imports cleanly on the CPU-only Windows host. Exit
-codes (design doc 1.4): 0 success, 2 input-contract failure (missing merged model
+codes (the CLI contract): 0 success, 2 input-contract failure (missing merged model
 or train.jsonl), 3 external dependency failure (GPU/import/CUDA unavailable, or a
 broken artifact that does not reload).
 """

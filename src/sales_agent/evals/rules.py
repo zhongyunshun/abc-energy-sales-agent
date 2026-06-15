@@ -1,18 +1,18 @@
-"""Behavioral rule metrics for offline eval (design doc 3-M9 step 3, proposal 4-D1).
+"""Behavioral rule metrics for offline eval (the M9 rule step, the M9 offline-eval target).
 
 Pure logic only (no torch / transformers / network) -- unit-tested on the host.
 Each rule maps a (already reasoning-stripped) assistant reply to a boolean flag;
 :func:`apply_rules` bundles the four flags plus the reply's token count for the
-``rule_flags`` field of the M9 results contract (design doc 2.4).
+``rule_flags`` field of the M9 results contract (the result contract).
 
-The four rules (proposal 4-D1: a voice sales agent must not invent prices, must
+The four rules (the M9 offline-eval target: a voice sales agent must not invent prices, must
 stay in role and compliant, and must keep replies short):
 
 - ``made_up_price``: the reply contains a concrete price/rate figure -> a
   hallucinated quote. The patterns are kept in sync *by hand* with M2's
   ``data/synthesize.py::DEFAULT_PRICE_PATTERNS`` (same caliber as the generation
   gate) -- NOT imported, because modules interact only through file contracts
-  (design doc 1.1); see :data:`DEFAULT_PRICE_PATTERNS` below.
+  (the module-boundary contract); see :data:`DEFAULT_PRICE_PATTERNS` below.
 - ``over_length``: token count > threshold (default 120) -- too long for speech.
 - ``role_break``: an "as an AI / language model" disclosure that breaks the
   sales-agent persona.
@@ -33,7 +33,7 @@ from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 
 # Same caliber as data/synthesize.py::DEFAULT_PRICE_PATTERNS (M2 generation gate).
-# Hand-synced copy -- the modules share a contract, not code (design doc 1.1). If
+# Hand-synced copy -- the modules share a contract, not code (the module-boundary contract). If
 # you change one, change the other. Matches currency-prefixed amounts and per-unit
 # energy rates while leaving bare usage figures ("950 kWh") and word numbers alone.
 DEFAULT_PRICE_PATTERNS: tuple[str, ...] = (
@@ -141,7 +141,7 @@ def apply_rules(completion: str, scenario: str, cfg: RuleConfig) -> tuple[dict[s
 
     Returns ``(rule_flags, n_tokens)``. ``completion`` MUST already be passed
     through :func:`samples.strip_reasoning` so an empty/leading ``<think>`` block
-    cannot inflate the token count or trip role_break (risk board Option A).
+    cannot inflate the token count or trip role_break (the Option A decision).
     """
     n_tokens = count_tokens(completion)
     flags = {

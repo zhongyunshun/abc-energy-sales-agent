@@ -1,4 +1,4 @@
-"""Guard test for configs/eval_offline.yaml (design doc 3-M9 invariants).
+"""Guard test for configs/eval_offline.yaml (the M9 contract invariants).
 
 The config is the single source of truth for the offline-eval stage; this pins the
 reproducibility invariants (greedy temperature=0, fixed max_tokens, the over_length
@@ -45,7 +45,7 @@ def test_generation_reproducible():
 
 
 def test_over_length_threshold():
-    # Voice replies are short (proposal 4-D1); the budget must be a positive int.
+    # Voice replies are short (the M9 offline-eval target); the budget must be a positive int.
     thr = _cfg()["rules"]["over_length_max_tokens"]
     assert isinstance(thr, int) and thr > 0
 

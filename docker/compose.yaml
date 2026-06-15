@@ -1,10 +1,10 @@
-# Service orchestration (design doc section 5.1).
+# Service orchestration (the service convention).
 #
 #   train  — Unsloth/TRL/llm-compressor container for M4-M7 (profile: train)
 #   serve  — official vLLM OpenAI-compatible server for M8+
 #
 # GPU note: train and serve share the single RTX 4070 (12GB). Do NOT run them
-# at the same time; stages are executed serially (proposal section 7).
+# at the same time; stages are executed serially (the shared-GPU rule).
 #
 # Usage (from repo root):
 #   docker compose -f docker/compose.yaml build train

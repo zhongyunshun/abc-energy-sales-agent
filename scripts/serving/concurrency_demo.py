@@ -1,4 +1,4 @@
-"""M8 concurrency demo (design doc 3-M8, task T8.4): proof that vLLM's continuous
+"""M8 concurrency demo (the M8 contract, task T8.4): proof that vLLM's continuous
 batching serves many streamed requests far faster than running them back-to-back.
 
 What it does:
@@ -12,7 +12,7 @@ What it does:
   5. print a summary table and commit the evidence under reports/serving/.
 
 This is a thin shell over the unit-tested timing core; it is real-server / GPU
-validation (run after serve.sh), not a unit test. Exit codes (design doc 1.4):
+validation (run after serve.sh), not a unit test. Exit codes (the CLI contract):
 0 success, 2 input-contract failure (no prompts), 3 external dep (endpoint
 unreachable). The model emits an empty <think></think> that the serve-layer qwen3
 reasoning parser strips into reasoning_content, so message.content is clean here.
@@ -60,7 +60,7 @@ def build_prompts(test_path: Path, n: int, seed: int) -> list[tuple[str, list[di
     """Take N dialogues' context (messages up to the last assistant turn).
 
     Returns (id, messages) where messages ends with a user turn -- the same prompt
-    construction M9 uses (design doc 3-M9). Deterministic: first N records by file
+    construction M9 uses (the M9 contract). Deterministic: first N records by file
     order (the split is already shuffled with a fixed seed upstream); ``seed`` is
     accepted for signature stability / future sampling.
     """

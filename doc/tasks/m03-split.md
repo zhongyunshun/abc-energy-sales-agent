@@ -3,7 +3,7 @@
 > English snapshot of `doc/tasks/m03-split.md`. The Chinese file is the source of
 > truth; if the two diverge, the Chinese original wins. Translated for the public repo (M12 delivery).
 
-> Design refs: `detailed-design.md` §3-M3 | Prerequisites: M0 (inputs may use fixtures in place of M1/M2 products)
+> Prerequisites: M0 (inputs may use fixtures in place of M1/M2 products)
 
 ## Tasks
 

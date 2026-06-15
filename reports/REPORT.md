@@ -303,7 +303,7 @@ the display), `max_model_len 3072`, `max_num_seqs 16`, prefix caching,
 `--quantization` flag** (compressed-tensors auto-detected). Full config and the
 [`patch_quant_config.py`](../scripts/serving/patch_quant_config.py) workaround: README §5.
 
-**Why 0.55 / 3072 / 16 (not the design defaults 0.90 / 4096 / 32).** The 4070 also
+**Why 0.55 / 3072 / 16 (not the initial defaults 0.90 / 4096 / 32).** The 4070 also
 drives the display, so real free VRAM was ~7.9GB, not a clean server-style 12GB.
 
 - `gpu_memory_utilization = 0.55` → vLLM plans around 12GB × 0.55 ≈ **6.6GB**,
@@ -431,7 +431,7 @@ Source: `reports/eval_offline/comparison.md`, `eval_offline/{base,sft,dpo}/summa
 | no_question_in_gathering | 8.15% | 6.46% | 6.15% |
 
 *The **120-token budget** is the maximum length for a voice reply (spoken answers must
-be short, proposal §4-D1); the `over_length` rule flags any reply above it.*
+be short, the voice-reply target); the `over_length` rule flags any reply above it.*
 
 | reply length (tokens) | base | sft | dpo |
 |---|---:|---:|---:|
@@ -468,7 +468,7 @@ test (Qwen), avoiding same-source bias. **600/600 scored, 0 parse failures.**
 "Same 100 ids/group" means all three models are judged on the **identical** 100
 dialogue contexts (a scenario-stratified, seed-42 subset of M9's 650-id test pool),
 so score gaps reflect the **model**, not which prompts each group happened to get.
-**Why 100:** a cost-vs-representativeness budget (proposal §4-D2) — 100/group × 3
+**Why 100:** a cost-vs-representativeness budget (the judge-sampling target) — 100/group × 3
 groups × 2 judges = 600 paid judge calls = $4.20; scoring all 650 would be ~6.5× the
 cost for no change in the conclusion, and 100 stratified + seeded is enough to detect
 the effects and stay reproducible.
@@ -610,7 +610,7 @@ was null throughout, consistent with M8's qwen3 parser stripping the empty `<thi
 
 ---
 
-# Appendix — report-map coverage (design §5.3)
+# Appendix — report-map coverage
 
 | §5.3 report item | section | source file(s) |
 |---|---|---|

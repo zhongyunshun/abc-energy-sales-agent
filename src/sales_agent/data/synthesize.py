@@ -1,4 +1,4 @@
-"""Synthesize energy-sales dialogues and DPO preference pairs (design doc section 3-M2).
+"""Synthesize energy-sales dialogues and DPO preference pairs (the M2 contract).
 
 Pure logic only: task-matrix expansion, few-shot seed selection, prompt
 construction, the generation-side quality gate (``parse_and_validate``), and the
@@ -52,7 +52,7 @@ GENERATOR_SYSTEM = (
     "explanation, no trailing text."
 )
 
-# Business rule (design doc section 3-M2 step 3): the assistant must not invent
+# Business rule (the M2 quality gate): the assistant must not invent
 # concrete prices/rates. These match currency-prefixed amounts and per-unit
 # energy rates while leaving bare usage figures ("950 kWh") and word numbers
 # alone. Extra patterns can be added via config `price_patterns`.
@@ -95,7 +95,7 @@ class SynthTask:
 
 @dataclass
 class SynthConfig:
-    """Parsed synthesize.yaml (design doc section 3-M2 config notes)."""
+    """Parsed synthesize.yaml (the M2 contract config notes)."""
 
     seed: int
     model: str
@@ -409,7 +409,7 @@ def _messages_from(raw_list: Any) -> list[Message]:
 def parse_and_validate(
     raw_text: str, task: SynthTask, cfg: SynthConfig
 ) -> DialogueRecord | PreferencePair | SynthError:
-    """The generation-side quality gate (design doc section 3-M2 step 3/4).
+    """The generation-side quality gate (the M2 quality gate).
 
     Dialogue mode: JSON parse -> Message build -> DialogueRecord -> semantic
     ``validate_dialogue`` -> turn-count lower bound -> no price digits in any
